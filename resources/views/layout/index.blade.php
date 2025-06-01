@@ -55,7 +55,7 @@
             <section class="main-section lg:w-[65%] w-full lg:mt-0 mt-[90px] flex justify-center flex-col items-center gap-5">
                 {{-- Iteration Here.. --}}
                 <div
-                    class="post-card lg:w-[468px] w-auto border-gray-300 border-2 rounded-xl h-auto shadow-[1px_3px_0_var(--color-gray-300)]">
+                    class="post-card lg:w-[468px] w-full border-gray-300 border-2 rounded-xl h-auto shadow-[1px_3px_0_var(--color-gray-300)]">
                     <div class="post-head p-3">
                         <div class="post-profile flex gap-3 items-center mb-3">
                             <img src="https://loremflickr.com/200/200?random=1" alt="random"
@@ -65,7 +65,7 @@
                         </div>
                         <h3>Title here.. </h3>
                     </div>
-                    <img src="https://loremflickr.com/400/300?random=1" alt="random" class="w-full rounded-sm px-3">
+                    <img src="https://loremflickr.com/400/300?random=1" alt="random" class="w-full rounded-2xl px-2 py-1">
                     <div class="post-icon flex p-3 justify-end gap-4">
                         <a href=""><i class="fa-regular fa-heart fa-lg "></i></a>
                         <a href=""> <i class="fa-regular fa-share-from-square fa-lg "></i></a>
@@ -84,7 +84,7 @@
                     </div>
                 </div>
                 <div
-                    class="post-card lg:w-[468px] w-auto border-gray-300 border-2 rounded-xl h-auto shadow-[1px_5px_0_var(--color-gray-300)]">
+                    class="post-card lg:w-[468px] w-full border-gray-300 border-2 rounded-xl h-auto shadow-[1px_5px_0_var(--color-gray-300)]">
                     <div class="post-head p-3">
                         <div class="post-profile flex gap-3 items-center mb-3">
                             <img src="https://loremflickr.com/200/200?random=1" alt="random"
@@ -94,7 +94,7 @@
                         </div>
                         <h3>Title here.. </h3>
                     </div>
-                    <img src="https://loremflickr.com/400/300?random=1" alt="random" class="w-full rounded-sm">
+                    <img src="https://loremflickr.com/400/300?random=1" alt="random" class="w-full rounded-2xl px-2 py-1">
                     <div class="post-icon flex p-3 justify-end gap-4">
                         <a href=""><i class="fa-regular fa-heart fa-lg "></i></a>
                         <a href=""><i class="fa-regular fa-share-from-square fa-lg "></i></a>
@@ -128,7 +128,7 @@
                     </div>
                 </div>
                 <div
-                    class="post-card lg:w-[468px] w-auto border-gray-300 border-2 rounded-xl h-auto shadow-[1px_5px_0_var(--color-gray-300)]">
+                    class="post-card lg:w-[468px] w-full border-gray-300 border-2 rounded-xl h-auto shadow-[1px_5px_0_var(--color-gray-300)]">
                     <div class="post-head p-3">
                         <div class="post-profile flex gap-3 items-center mb-3">
                             <img src="https://loremflickr.com/200/200?random=1" alt="random"
@@ -137,7 +137,7 @@
                                     minutes ago</span></p>
                         </div>
                     </div>
-                    <img src="https://loremflickr.com/400/300?random=1" alt="random" class="w-full rounded-sm">
+                    <img src="https://loremflickr.com/400/300?random=1" alt="random" class="w-full rounded-2xl px-2 py-1">
                     <div class="post-icon flex p-3 justify-end gap-2">
                         <a href=""><i class="fa-regular fa-heart fa-lg "></i></a>
                         <a href=""><i class="fa-regular fa-share-from-square fa-lg "></i></a>
