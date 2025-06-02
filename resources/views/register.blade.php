@@ -150,7 +150,7 @@
                     </div>
                     <button type="submit"
                         class="bg-blue-500 shadow-[0_5px_0_var(--color-blue-700)] active:shadow-none active:translate-y-0.5 text-white p-2 rounded-md ">Daftar</button>
-                    <p class="text-gray-500 text-sm">Sudah punya akun? <a href=""
+                    <p class="text-gray-500 text-sm">Sudah punya akun? <a href="{{ route('login') }}"
                             class="text-blue-500">Masuk</a>
                     </p>
                 </div>
