@@ -3,8 +3,8 @@ Under Development Website
 // tommorow task
 
 1. login and register page // done
-2. seacrh page // on progres
-3. post page
+2. seacrh page // on done
+3. post page // on progress
 4. Profile page
 5. backend session start
 6. make migratrion

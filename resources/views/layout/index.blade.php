@@ -36,7 +36,7 @@
                         type="button">
                         <i class="fa-solid fa-search lg:me-2"></i> <span class="pt-1 lg:block hidden"> Cari</span>
                     </button>
-                    <a href="#"
+                    <a href="{{ route('smk-users-add') }}"
                         class="sidebar-item active:shadow-none active:translate-0.5 bg-green-500 shadow-[0_5px_0_var(--color-green-700)] text-white items-center flex justify-center   lg:px-5 lg:py-2 px-3 py-1 rounded-xl ">
                         <i class="fa-solid fa-add lg:me-2"></i> <span class="pt-1 lg:block hidden"> Tambahkan</span>
                     </a>
