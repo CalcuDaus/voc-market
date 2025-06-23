@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('layout.index');
+    return view('components.main');
 })->name('home');
 
 Route::get('/login', function () {
@@ -14,5 +14,15 @@ Route::get('/register', function () {
 })->name('register');
 
 Route::get('/smk-users-add', function () {
-    return view('smk-users-add');
+    return view('components.main');
 })->name('smk-users-add');
+
+Route::get('/add-product', function () {
+    return view('components.main');
+})->name('add-product');
+Route::get('/add-service', function () {
+    return view('components.main');
+})->name('add-service');
+Route::get('/add-portfolio', function () {
+    return view('components.main');
+})->name('add-portfolio');
