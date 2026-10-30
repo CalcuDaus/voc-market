@@ -1,24 +1,46 @@
-/.phpunit.cache
-/node_modules
-/public/build
-/public/voc-market
-/public/hot
-/public/storage
-/storage/*.key
-/storage/pail
-/vendor
+# Bun + ElysiaJS + Svelte 5 + MySQL (New Stack)
+node_modules/
+dist/
+public/uploads/
 .env
-.env.backup
+.env.local
+.env.test
 .env.production
-.phpactor.json
-.phpunit.result.cache
-Homestead.json
-Homestead.yaml
-npm-debug.log
-yarn-error.log
-/auth.json
+*.log
+
+# Legacy Laravel Archive Ignores
+/_legacy_laravel/.phpunit.cache
+/_legacy_laravel/.phpunit.result.cache
+/_legacy_laravel/node_modules
+/_legacy_laravel/public/build
+/_legacy_laravel/public/voc-market
+/_legacy_laravel/public/hot
+/_legacy_laravel/public/storage
+/_legacy_laravel/storage/*.key
+/_legacy_laravel/storage/pail
+/_legacy_laravel/vendor
+/_legacy_laravel/.env
+/_legacy_laravel/.env.backup
+/_legacy_laravel/.env.production
+
+# Editor & IDE
 /.fleet
 /.idea
 /.nova
 /.vscode
 /.zed
+
+# Auto-generated agent rules (personalized per developer)
+.brainsync/agent-rules.md
+
+# Auto-generated AI agent exclusions
+.cursorrules
+.clineRules
+.agent/
+.agent-mem/
+.windsurfrules
+.gemini/
+.cline/
+
+AGENT.md
+CLAUDE.md

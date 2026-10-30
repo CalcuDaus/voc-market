@@ -1,0 +1,68 @@
+[
+  { "regionCode": "32.01", "name": "Cibinong", "latitude": -6.481944, "longitude": 106.853056 },
+  { "regionCode": "32.01", "name": "Citeureup", "latitude": -6.489167, "longitude": 106.877778 },
+  { "regionCode": "32.01", "name": "Babakan Madang", "latitude": -6.551389, "longitude": 106.878056 },
+  { "regionCode": "32.01", "name": "Bojonggede", "latitude": -6.495278, "longitude": 106.797222 },
+  { "regionCode": "32.01", "name": "Sukaraja", "latitude": -6.564722, "longitude": 106.837500 },
+  { "regionCode": "32.01", "name": "Cileungsi", "latitude": -6.402778, "longitude": 106.963889 },
+  { "regionCode": "32.01", "name": "Gunung Putri", "latitude": -6.435278, "longitude": 106.908056 },
+
+  { "regionCode": "32.71", "name": "Bogor Tengah", "latitude": -6.597500, "longitude": 106.797500 },
+  { "regionCode": "32.71", "name": "Bogor Selatan", "latitude": -6.634167, "longitude": 106.804167 },
+  { "regionCode": "32.71", "name": "Bogor Utara", "latitude": -6.571111, "longitude": 106.811667 },
+  { "regionCode": "32.71", "name": "Bogor Timur", "latitude": -6.611111, "longitude": 106.822222 },
+  { "regionCode": "32.71", "name": "Bogor Barat", "latitude": -6.586667, "longitude": 106.763333 },
+  { "regionCode": "32.71", "name": "Tanah Sareal", "latitude": -6.558333, "longitude": 106.786111 },
+
+  { "regionCode": "31.71", "name": "Gambir", "latitude": -6.175000, "longitude": 106.825000 },
+  { "regionCode": "31.71", "name": "Tanah Abang", "latitude": -6.195000, "longitude": 106.815000 },
+  { "regionCode": "31.71", "name": "Menteng", "latitude": -6.195556, "longitude": 106.834444 },
+  { "regionCode": "31.71", "name": "Senen", "latitude": -6.188889, "longitude": 106.845833 },
+  { "regionCode": "31.71", "name": "Cempaka Putih", "latitude": -6.183333, "longitude": 106.866667 },
+
+  { "regionCode": "31.74", "name": "Kebayoran Baru", "latitude": -6.241944, "longitude": 106.797222 },
+  { "regionCode": "31.74", "name": "Kebayoran Lama", "latitude": -6.245833, "longitude": 106.777778 },
+  { "regionCode": "31.74", "name": "Cilandak", "latitude": -6.291667, "longitude": 106.797222 },
+  { "regionCode": "31.74", "name": "Pasar Minggu", "latitude": -6.286111, "longitude": 106.838889 },
+  { "regionCode": "31.74", "name": "Tebet", "latitude": -6.227778, "longitude": 106.855556 },
+
+  { "regionCode": "32.73", "name": "Coblong", "latitude": -6.883333, "longitude": 107.616667 },
+  { "regionCode": "32.73", "name": "Sumur Bandung", "latitude": -6.916667, "longitude": 107.616667 },
+  { "regionCode": "32.73", "name": "Cicendo", "latitude": -6.908333, "longitude": 107.595833 },
+  { "regionCode": "32.73", "name": "Lengkong", "latitude": -6.933333, "longitude": 107.625000 },
+  { "regionCode": "32.73", "name": "Regol", "latitude": -6.938889, "longitude": 107.608333 },
+
+  { "regionCode": "34.71", "name": "Gondokusuman", "latitude": -7.783333, "longitude": 110.383333 },
+  { "regionCode": "34.71", "name": "Danurejan", "latitude": -7.794444, "longitude": 110.372222 },
+  { "regionCode": "34.71", "name": "Umbulharjo", "latitude": -7.816667, "longitude": 110.388889 },
+  { "regionCode": "34.71", "name": "Kraton", "latitude": -7.808333, "longitude": 110.363889 },
+  { "regionCode": "34.71", "name": "Mantrijeron", "latitude": -7.822222, "longitude": 110.361111 },
+
+  { "regionCode": "35.78", "name": "Gubeng", "latitude": -7.275000, "longitude": 112.758333 },
+  { "regionCode": "35.78", "name": "Wonokromo", "latitude": -7.300000, "longitude": 112.736111 },
+  { "regionCode": "35.78", "name": "Tegalsari", "latitude": -7.269444, "longitude": 112.738889 },
+  { "regionCode": "35.78", "name": "Genteng", "latitude": -7.258333, "longitude": 112.747222 },
+  { "regionCode": "35.78", "name": "Rungkut", "latitude": -7.322222, "longitude": 112.780556 },
+
+  { "regionCode": "35.73", "name": "Klojen", "latitude": -7.978611, "longitude": 112.631667 },
+  { "regionCode": "35.73", "name": "Lowokwaru", "latitude": -7.944444, "longitude": 112.616667 },
+  { "regionCode": "35.73", "name": "Blimbing", "latitude": -7.941667, "longitude": 112.647222 },
+  { "regionCode": "35.73", "name": "Sukun", "latitude": -8.002778, "longitude": 112.616667 },
+  { "regionCode": "35.73", "name": "Kedungkandang", "latitude": -8.005556, "longitude": 112.661111 },
+
+  { "regionCode": "33.74", "name": "Semarang Tengah", "latitude": -6.983333, "longitude": 110.416667 },
+  { "regionCode": "33.74", "name": "Semarang Selatan", "latitude": -7.000000, "longitude": 110.422222 },
+  { "regionCode": "33.74", "name": "Banyumanik", "latitude": -7.066667, "longitude": 110.416667 },
+
+  { "regionCode": "33.72", "name": "Banjarsari", "latitude": -7.550000, "longitude": 110.825000 },
+  { "regionCode": "33.72", "name": "Laweyan", "latitude": -7.566667, "longitude": 110.797222 },
+  { "regionCode": "33.72", "name": "Pasar Kliwon", "latitude": -7.577778, "longitude": 110.833333 },
+
+  { "regionCode": "36.74", "name": "Serpong", "latitude": -6.316667, "longitude": 106.666667 },
+  { "regionCode": "36.74", "name": "Ciputat", "latitude": -6.311111, "longitude": 106.744444 },
+  { "regionCode": "36.74", "name": "Pamulang", "latitude": -6.344444, "longitude": 106.733333 },
+
+  { "regionCode": "51.71", "name": "Denpasar Selatan", "latitude": -8.694444, "longitude": 115.227778 },
+  { "regionCode": "51.71", "name": "Denpasar Barat", "latitude": -8.655556, "longitude": 115.197222 }
+]
+

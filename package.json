@@ -1,19 +1,41 @@
 {
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "build": "vite build",
-        "dev": "vite"
-    },
-    "devDependencies": {
-        "@tailwindcss/vite": "^4.1.7",
-        "axios": "^1.8.2",
-        "concurrently": "^9.0.1",
-        "laravel-vite-plugin": "^1.2.0",
-        "tailwindcss": "^4.1.7",
-        "vite": "^6.2.4"
-    },
-    "dependencies": {
-        "flowbite": "^3.1.2"
-    }
+  "name": "voc-market",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:server": "bun --watch src/server/index.ts",
+    "dev:client": "vite",
+    "dev": "concurrently -n api,web -c blue,green \"bun run dev:server\" \"bun run dev:client\"",
+    "build": "vite build",
+    "start": "bun src/server/index.ts",
+    "db:reset": "bun src/server/db/reset.ts",
+    "db:push": "drizzle-kit push --force",
+    "db:seed": "bun src/server/db/seed.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/cron": "^1.4.2",
+    "@elysiajs/eden": "^1.2.0",
+    "@elysiajs/static": "^1.2.0",
+    "drizzle-orm": "^0.40.0",
+    "elysia": "^1.2.25",
+    "lucide-svelte": "^0.475.0",
+    "mysql2": "^3.12.0",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@tailwindcss/vite": "^4.0.9",
+    "@types/bun": "^1.2.4",
+    "@types/qrcode": "^1.5.5",
+    "concurrently": "^9.1.2",
+    "drizzle-kit": "^0.30.5",
+    "svelte": "^5.20.0",
+    "tailwindcss": "^4.0.9",
+    "typescript": "^5.7.3",
+    "vite": "^6.2.0"
+  }
 }
