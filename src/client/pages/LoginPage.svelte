@@ -3,12 +3,16 @@
     ArrowLeft,
     GraduationCap,
     LogIn,
+    ShieldAlert,
     UserCheck,
-    Users
+    Users,
+    X
   } from 'lucide-svelte';
   import { apiFetch } from '../lib/api';
   import { auth } from '../lib/auth.svelte';
-  import { navigate } from '../lib/router.svelte';
+  import { navigate, router } from '../lib/router.svelte';
+  import { sanitizeInput } from '../lib/security';
+  import { sessionManager, type SavedAccount } from '../lib/session.svelte';
   import { toast } from '../lib/toast.svelte';
 
   let identifier = $state('');
@@ -16,15 +20,45 @@
   let remember = $state(true);
   let loading = $state(false);
   let errorMsg = $state('');
+  let savedAccount = $state<SavedAccount | null>(null);
+
+  let isSessionExpiredAlert = $derived(
+    router.search.includes('reason=session_expired')
+  );
+
+  $effect(() => {
+    savedAccount = sessionManager.getSavedAccount();
+    if (savedAccount && !identifier) {
+      identifier = savedAccount.username;
+    }
+  });
+
+  function useSavedAccount() {
+    if (savedAccount) {
+      identifier = savedAccount.username;
+      const pwInput = document.getElementById('login-pw');
+      if (pwInput) pwInput.focus();
+    }
+  }
+
+  function handleRemoveSavedAccount(e: MouseEvent) {
+    e.stopPropagation();
+    sessionManager.clearSavedAccount();
+    savedAccount = null;
+    identifier = '';
+  }
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     errorMsg = '';
     loading = true;
 
+    // Filter XSS on form inputs
+    const cleanIdentifier = sanitizeInput(identifier);
+
     const res = await apiFetch('/api/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ identifier, password, remember })
+      body: JSON.stringify({ identifier: cleanIdentifier, password, remember })
     });
 
     loading = false;
@@ -33,7 +67,13 @@
       return;
     }
 
-    auth.setAuthenticated(res.data.user);
+    if (remember) {
+      sessionManager.saveAccount(res.data.user);
+    } else {
+      sessionManager.clearSavedAccount();
+    }
+
+    auth.setAuthenticated(res.data.user, res.data.session);
     await auth.refresh();
     toast.success(`Selamat datang kembali, ${res.data.user.name}!`);
 
@@ -132,9 +172,51 @@
           <span class="text-[#34A853]">Wel</span><span class="text-[#4285F4]">come</span>,
           <span class="text-[#FBBC05]">Wari</span><span class="text-[#EA4335]">orrs</span>
         </h2>
-        <p class="text-xs text-gray-500 mb-5">
+        <p class="text-xs text-gray-500 mb-4">
           Masuk ke akun Anda untuk mulai berkarya atau memesan.
         </p>
+
+        {#if isSessionExpiredAlert}
+          <div class="mb-4 p-3 rounded-xl bg-amber-50 border-2 border-amber-300 text-amber-900 text-xs font-bold flex items-center gap-2 shadow-[0_2px_0_#fde68a]">
+            <ShieldAlert class="w-4 h-4 text-amber-600 shrink-0" />
+            <span>Sesi akun Anda telah berakhir demi keamanan. Silakan masukkan password untuk masuk kembali.</span>
+          </div>
+        {/if}
+
+        {#if savedAccount}
+          <!-- Saved Account Quick Login Chip (Meta / Facebook style) -->
+          <div class="mb-4 p-3 rounded-2xl bg-blue-50/90 border-2 border-blue-200 shadow-[0_3px_0_#bfdbfe] flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onclick={useSavedAccount}
+              class="flex items-center gap-3 text-left overflow-hidden flex-1 group cursor-pointer"
+            >
+              <img
+                src={savedAccount.avatarUrl}
+                alt={savedAccount.name}
+                class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-xs shrink-0 group-hover:scale-105 transition"
+              />
+              <div class="overflow-hidden">
+                <p class="text-xs font-black text-gray-900 truncate group-hover:text-[#4285F4] transition">
+                  {savedAccount.name}
+                </p>
+                <p class="text-[11px] text-[#4285F4] font-bold truncate">
+                  @{savedAccount.username}
+                </p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onclick={handleRemoveSavedAccount}
+              title="Lupakan akun tersimpan ini"
+              class="h-7 px-2.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-500 hover:text-red-600 text-[11px] font-bold transition flex items-center gap-1 cursor-pointer shrink-0"
+            >
+              <X class="w-3.5 h-3.5" />
+              <span>Ganti</span>
+            </button>
+          </div>
+        {/if}
 
         {#if errorMsg}
           <div class="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-[#EA4335] text-xs font-bold">
@@ -172,16 +254,19 @@
           </div>
 
           <div class="flex items-center justify-between text-xs text-gray-600">
-            <label class="flex items-center gap-2 cursor-pointer">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
               <input
                 type="checkbox"
                 bind:checked={remember}
-                class="rounded border-gray-300 text-[#4285F4] focus:ring-[#4285F4]"
+                class="w-4 h-4 rounded border-2 border-gray-300 text-[#4285F4] focus:ring-[#4285F4] cursor-pointer"
               />
-              <span>Ingat Saya</span>
+              <div>
+                <span class="font-bold text-gray-800">Ingat Saya (Remind Me)</span>
+                <span class="block text-[10px] text-gray-400">Tetap masuk selama 30 hari</span>
+              </div>
             </label>
 
-            <span class="text-[#4285F4] font-medium">Password demo: password123</span>
+            <span class="text-[#4285F4] font-medium hidden sm:inline">Demo: password123</span>
           </div>
 
           <!-- Submit Button Google Blue Chunky 3D (Section 4.3) -->

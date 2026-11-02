@@ -8,23 +8,64 @@ import {
   buildSessionCookie,
   createSession,
   destroySessionFromRequest,
+  extractSessionTokenFromRequest,
+  resolveSessionContextFromRequest,
   resolveUserFromRequest,
-  sanitizeSelfUser
+  sanitizeSelfUser,
+  touchSession
 } from '../middleware/auth';
-import { checkRateLimit, getClientIp } from '../middleware/rate-limit';
+import { sanitizeXss } from '../middleware/security';
+import { attachRateLimitHeaders, checkRateLimit, getClientIp } from '../middleware/rate-limit';
 import { ImageValidationError, saveUploadedWebp } from '../services/image.service';
 import { getUnreadNotificationsCount } from '../services/notify.service';
 import { StatsService } from '../services/stats.service';
 
 export const authRoutes = new Elysia({ prefix: '/api/auth' })
+  .get('/session', async ({ request }) => {
+    const ctx = await resolveSessionContextFromRequest(request);
+    if (!ctx.user || !ctx.session) {
+      return {
+        authenticated: false,
+        user: null,
+        expiresAt: null,
+        remainingSeconds: 0,
+        isRemembered: false
+      };
+    }
+    return {
+      authenticated: true,
+      user: sanitizeSelfUser(ctx.user),
+      expiresAt: ctx.session.expiresAt.toISOString(),
+      remainingSeconds: ctx.session.remainingSeconds,
+      isRemembered: ctx.session.isRemembered
+    };
+  })
+
+  .post('/ping', async ({ request, set }) => {
+    const token = extractSessionTokenFromRequest(request);
+    if (!token) {
+      set.status = 401;
+      return { error: 'Sesi tidak valid atau telah berakhir.', code: 'SESSION_EXPIRED' };
+    }
+    const newExpiresAt = await touchSession(token);
+    if (!newExpiresAt) {
+      set.status = 401;
+      return { error: 'Sesi telah berakhir.', code: 'SESSION_EXPIRED' };
+    }
+    return { ok: true, expiresAt: newExpiresAt.toISOString() };
+  })
+
   .get('/me', async ({ request }) => {
-    const user = await resolveUserFromRequest(request);
+    const ctx = await resolveSessionContextFromRequest(request);
+    const user = ctx.user;
     if (!user) {
       return {
         user: null,
         pendingOrdersCount: 0,
         unreadNotificationsCount: 0,
-        schoolSlug: null
+        schoolSlug: null,
+        sessionExpiresAt: null,
+        isRemembered: false
       };
     }
 
@@ -53,29 +94,32 @@ export const authRoutes = new Elysia({ prefix: '/api/auth' })
       user: sanitizeSelfUser(user),
       pendingOrdersCount,
       unreadNotificationsCount,
-      schoolSlug
+      schoolSlug,
+      sessionExpiresAt: ctx.session?.expiresAt.toISOString() ?? null,
+      remainingSeconds: ctx.session?.remainingSeconds ?? 0,
+      isRemembered: ctx.session?.isRemembered ?? false
     };
   })
 
   .post('/register', async ({ request, body, set }) => {
     const ip = getClientIp(request);
     const rl = checkRateLimit('register', ip, 5, 60_000);
+    attachRateLimitHeaders(set.headers, rl);
     if (!rl.allowed) {
       set.status = 429;
-      set.headers['Retry-After'] = String(rl.retryAfterSec);
       return {
         error: `Terlalu banyak percobaan pendaftaran. Mohon tunggu ${rl.retryAfterSec} detik.`
       };
     }
 
     const data = (body ?? {}) as Record<string, unknown>;
-    const email = String(data.email ?? '').trim().toLowerCase();
-    const firstName = String(data.firstName ?? data.first_name ?? '').trim();
-    const lastName = String(data.lastName ?? data.last_name ?? '').trim();
-    const username = String(data.username ?? '').trim().toLowerCase();
+    const email = sanitizeXss(String(data.email ?? '')).trim().toLowerCase();
+    const firstName = sanitizeXss(String(data.firstName ?? data.first_name ?? '')).trim();
+    const lastName = sanitizeXss(String(data.lastName ?? data.last_name ?? '')).trim();
+    const username = sanitizeXss(String(data.username ?? '')).trim().toLowerCase();
     const password = String(data.password ?? '');
     const confirmPassword = String(data.confirmPassword ?? data.confirm_password ?? password);
-    const phoneNumber = String(data.phoneNumber ?? data.phone_number ?? '').trim();
+    const phoneNumber = sanitizeXss(String(data.phoneNumber ?? data.phone_number ?? '')).trim();
     const userTypeRaw = String(data.userType ?? data.user_type ?? 'smk').trim();
 
     // Admin CANNOT be registered through public endpoint!
@@ -264,9 +308,9 @@ export const authRoutes = new Elysia({ prefix: '/api/auth' })
 
     const ip = getClientIp(request);
     const rl = checkRateLimit('login', `${identifier}|${ip}`, 5, 60_000);
+    attachRateLimitHeaders(set.headers, rl);
     if (!rl.allowed) {
       set.status = 429;
-      set.headers['Retry-After'] = String(rl.retryAfterSec);
       return {
         error: `Terlalu banyak percobaan masuk. Mohon tunggu ${rl.retryAfterSec} detik sebelum mencoba kembali.`
       };
@@ -301,7 +345,12 @@ export const authRoutes = new Elysia({ prefix: '/api/auth' })
     set.headers['Set-Cookie'] = buildSessionCookie(session.rawToken, session.maxAgeSec);
 
     return {
-      user: sanitizeSelfUser(user)
+      user: sanitizeSelfUser(user),
+      session: {
+        expiresAt: session.expiresAt.toISOString(),
+        maxAgeSec: session.maxAgeSec,
+        isRemembered: remember
+      }
     };
   })
 

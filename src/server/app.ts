@@ -2,7 +2,8 @@ import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
 import { existsSync } from 'node:fs';
 import { join, normalize } from 'node:path';
-import { applySecurityHeaders, SECURITY_HEADERS } from './middleware/security';
+import { applySecurityHeaders, sanitizePayload, SECURITY_HEADERS } from './middleware/security';
+import { attachRateLimitHeaders, checkGlobalApiRateLimit } from './middleware/rate-limit';
 import { authRoutes } from './modules/auth.routes';
 import { postsRoutes } from './modules/posts.routes';
 import { ordersRoutes } from './modules/orders.routes';
@@ -42,6 +43,33 @@ export function createApp() {
       })
     )
     .use(createCronPlugin())
+    .onTransform(({ body, query, params }) => {
+      // Enterprise Recursive XSS Sanitization Filter
+      if (body && typeof body === 'object') {
+        sanitizePayload(body);
+      }
+      if (query && typeof query === 'object') {
+        sanitizePayload(query);
+      }
+      if (params && typeof params === 'object') {
+        sanitizePayload(params);
+      }
+    })
+    .onBeforeHandle(({ request, set }) => {
+      // Global API Rate Limiter (Scraper & DDoS guard, 150 req/min per IP)
+      const url = new URL(request.url);
+      if (url.pathname.startsWith('/api/') && url.pathname !== '/api/health') {
+        const rl = checkGlobalApiRateLimit(request);
+        attachRateLimitHeaders(set.headers, rl);
+        if (!rl.allowed) {
+          set.status = 429;
+          return {
+            error: `Terlalu banyak permintaan ke server. Silakan coba kembali dalam ${rl.retryAfterSec} detik.`,
+            retryAfterSec: rl.retryAfterSec
+          };
+        }
+      }
+    })
     .onAfterHandle(({ set }) => {
       applySecurityHeaders(set.headers);
     })

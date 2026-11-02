@@ -10,6 +10,7 @@
   import { apiFetch } from '../lib/api';
   import { auth } from '../lib/auth.svelte';
   import { navigate } from '../lib/router.svelte';
+  import { sanitizeInput } from '../lib/security';
   import { toast } from '../lib/toast.svelte';
   import SchoolAutocomplete from '../lib/components/SchoolAutocomplete.svelte';
 
@@ -70,36 +71,36 @@
 
     const form = new FormData();
     form.append('userType', userType);
-    form.append('firstName', firstName);
-    form.append('lastName', lastName);
-    form.append('username', username);
-    form.append('email', email);
-    form.append('phoneNumber', phoneNumber);
+    form.append('firstName', sanitizeInput(firstName));
+    form.append('lastName', sanitizeInput(lastName));
+    form.append('username', sanitizeInput(username).toLowerCase());
+    form.append('email', sanitizeInput(email).toLowerCase());
+    form.append('phoneNumber', sanitizeInput(phoneNumber));
     form.append('password', password);
     form.append('confirmPassword', confirmPassword);
     if (regionId > 0) form.append('regionId', String(regionId));
 
     if (userType === 'smk' || userType === 'teacher') {
-      form.append('schoolName', schoolName);
+      form.append('schoolName', sanitizeInput(schoolName));
       if (schoolId) form.append('schoolId', String(schoolId));
-      form.append('major', major);
+      form.append('major', sanitizeInput(major));
     }
     if (userType === 'smk') {
-      form.append('nisn', nisn);
-      form.append('skills', skills);
+      form.append('nisn', sanitizeInput(nisn));
+      form.append('skills', sanitizeInput(skills));
     }
     if (userType === 'teacher') {
-      form.append('nip', nip);
+      form.append('nip', sanitizeInput(nip));
     }
     if (userType === 'public') {
-      if (businessName) form.append('businessName', businessName);
-      if (businessType) form.append('businessType', businessType);
+      if (businessName) form.append('businessName', sanitizeInput(businessName));
+      if (businessType) form.append('businessType', sanitizeInput(businessType));
     }
     if (userType === 'company') {
-      form.append('companyName', companyName);
-      if (companySector) form.append('companySector', companySector);
-      if (companyWebsite) form.append('companyWebsite', companyWebsite);
-      if (companyNib) form.append('companyNib', companyNib);
+      form.append('companyName', sanitizeInput(companyName));
+      if (companySector) form.append('companySector', sanitizeInput(companySector));
+      if (companyWebsite) form.append('companyWebsite', sanitizeInput(companyWebsite));
+      if (companyNib) form.append('companyNib', sanitizeInput(companyNib));
     }
     if (avatarFile) {
       form.append('avatar', avatarFile);

@@ -4,6 +4,8 @@
   import { navigate, router } from './lib/router.svelte';
   import Navbar from './lib/components/Navbar.svelte';
   import ToastContainer from './lib/components/ToastContainer.svelte';
+  import SessionWarningModal from './lib/components/SessionWarningModal.svelte';
+  import { sessionManager } from './lib/session.svelte';
 
   // Tier 1 Pages
   import HomePage from './pages/HomePage.svelte';
@@ -41,6 +43,7 @@
   import SellerReportPrintPage from './pages/SellerReportPrintPage.svelte';
 
   $effect(() => {
+    sessionManager.init();
     auth.refresh();
   });
 
@@ -185,9 +188,10 @@
   );
 </script>
 
-<!-- Double-layer Canvas Background: Layer 1 Outer bg-gray-50/50 (System Design Section 1 & 3) -->
-<div class="min-h-screen bg-gray-50/50 text-gray-900 font-['Poppins',sans-serif]">
+<!-- Layered Canvas System: Outer bg-white with centered bg-[#EEEEEE] card canvas -->
+<div class="min-h-screen bg-white text-gray-900 font-['Poppins',sans-serif]">
   <ToastContainer />
+  <SessionWarningModal />
 
   {#if isAuthPage}
     <!-- Dedicated Fullscreen Canvas for Auth Pages (Section 4 & 5) -->
@@ -197,10 +201,11 @@
       <RegisterPage />
     {/if}
   {:else}
-    <!-- Double-layer Canvas: Layer 2 Inner Canvas Container bg-[#EEEEEE] -->
-    <div class="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 py-0 lg:py-5 print:p-0">
+    <!-- Outer White Canvas: Flanks left & right with pure white (Layer 0) -->
+    <div class="min-h-screen bg-white flex justify-center px-0 sm:px-4 md:px-6 lg:px-8 print:p-0">
+      <!-- Centered Layered Card Canvas: bg-[#EEEEEE] full-height (Layer 1) -->
       <div
-        class="bg-[#EEEEEE] rounded-2xl p-2 sm:p-4 lg:p-5 shadow-md border border-gray-300/80 flex justify-center gap-6 items-start print:bg-transparent print:border-0 print:shadow-none print:p-0"
+        class="w-full max-w-[1440px] bg-[#EEEEEE] min-h-screen px-2 sm:px-4 lg:px-6 py-0 lg:py-5 flex justify-center gap-6 items-start shadow-sm border-x border-gray-300/60 print:bg-transparent print:border-0 print:shadow-none print:p-0"
       >
         <!-- Left Column: Desktop Left Sidebar Menu + Mobile Nav Provider -->
         <div class="w-0 lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-5 lg:self-start print:hidden">

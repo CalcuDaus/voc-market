@@ -1,7 +1,7 @@
 
 
 # Project Memory — voc-market
-> 37 notes | Score threshold: >40
+> 71 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,27 +18,21 @@
 
 **Stack:** JavaScript/TypeScript · Tailwind
 
-## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
+## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Project Standards
 
-- **Low cohesion detected in Domain Cluster 10** — Cluster 10 (12 nodes) has a very low cohesion score (0.08). This sugge
+- convention in .gitignore
+- Replaced auth StatsService — wraps unsafe operation in error boundary — confirmed 4x
+- Patched security issue ImageValidationError — uses a proper password hashing ... — confirmed 12x
+- Fixed null crash in String — prevents XSS injection attacks — confirmed 10x
+- 11 potentially unused files detected — confirmed 3x
+- Enable strict mode in tsconfig.json
+- Prefer Array methods (map, filter, reduce) over manual loops
+- Use template literals for string interpolation, not concatenation
 
-## Active: `.`
+## Known Fixes
 
-- **problem-fix in tsconfig.json**
-- **problem-fix in .gitignore**
-- **what-changed in package.json**
-- **🟢 Edited plan/03_TIER3_BUN_ELYSIA_SVELTE_PLAN.md (464 changes, 33min)**
-
-## Project Standards
-
-- Extract repeated class patterns into components
-- Use responsive prefixes consistently (sm:, md:, lg:, xl:)
-- Don't use arbitrary values when a utility class exists
-- Use .dockerignore to exclude unnecessary files
-- Use multi-stage builds to reduce image size
-- Follow PEP 8 style guide
-- Use pathlib for file paths, not os.path string manipulation
-- Use virtual environments (venv, poetry, or conda)
+- ❌ + import { ImageValidationError, saveUploadedWebp } from '../services/image.service'; → ✅ Patched security issue ImageValidationError — uses a proper password hashing ...
+- ❌ - import { ImageValidationError, saveUploadedWebp } from '../services/image.service'; → ✅ Patched security issue ImageValidationError — uses a proper password hashing ...
 
 ## Verified Best Practices
 

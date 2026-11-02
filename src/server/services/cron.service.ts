@@ -2,8 +2,12 @@ import { Elysia } from 'elysia';
 import { cron } from '@elysiajs/cron';
 import { and, eq, lte } from 'drizzle-orm';
 import { activeDatabaseUrl, db } from '../db';
-import { challenges, hiringInvitations, jobRequests } from '../db/schema';
+import { challenges, hiringInvitations, jobRequests, sessions } from '../db/schema';
 import { StatsService } from './stats.service';
+
+export async function runCleanupExpiredSessions(): Promise<void> {
+  await db.delete(sessions).where(lte(sessions.expiresAt, new Date()));
+}
 
 export async function runExpireRequests(): Promise<void> {
   await db
@@ -91,6 +95,19 @@ export function createCronPlugin() {
             await runRecalculateStats();
           } catch (err) {
             console.error('[Cron recalculateStats]', err);
+          }
+        }
+      })
+    )
+    .use(
+      cron({
+        name: 'cleanupExpiredSessions',
+        pattern: '0 * * * *',
+        async run() {
+          try {
+            await runCleanupExpiredSessions();
+          } catch (err) {
+            console.error('[Cron cleanupExpiredSessions]', err);
           }
         }
       })

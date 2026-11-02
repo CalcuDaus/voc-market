@@ -130,28 +130,30 @@
 
 <!-- Desktop Left Sidebar (>= lg) — 3D Tactile Card (System Design Section 6.1) -->
 <aside
-  class="hidden lg:flex lg:flex-col bg-white border-2 border-gray-300 rounded-2xl p-4 xl:p-5 shadow-[0_5px_0_#d1d5db] justify-between min-h-[calc(100vh-2.5rem)] print:hidden"
+  class="hidden lg:flex lg:flex-col bg-white border-2 border-gray-300 rounded-2xl shadow-[0_5px_0_#d1d5db] h-[calc(100vh-2.5rem)] max-h-[calc(100vh-2.5rem)] overflow-hidden print:hidden"
 >
-  <div class="space-y-4">
-    <!-- Logo VOCMARKET -->
-    <div class="pt-1 pb-2 text-center border-b-2 border-gray-100">
-      <button
-        type="button"
-        onclick={() => navigate('/')}
-        class="inline-block text-center focus:outline-none group cursor-pointer"
+  <!-- Fixed Header: Logo VOCMARKET -->
+  <div class="p-4 xl:p-5 pb-3 text-center border-b-2 border-gray-100 shrink-0">
+    <button
+      type="button"
+      onclick={() => navigate('/')}
+      class="inline-block text-center focus:outline-none group cursor-pointer"
+    >
+      <span
+        class="font-black text-2xl xl:text-[26px] tracking-wider text-gray-800 uppercase block drop-shadow-xs group-hover:text-[#4285F4] transition"
       >
-        <span
-          class="font-black text-2xl xl:text-[26px] tracking-wider text-gray-800 uppercase block drop-shadow-xs group-hover:text-[#4285F4] transition"
-        >
-          VOCMARKET
-        </span>
-        <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">
-          Katalog & Jembatan Industri
-        </span>
-      </button>
-    </div>
+        VOCMARKET
+      </span>
+      <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+        Katalog & Jembatan Industri
+      </span>
+    </button>
+  </div>
 
-    <!-- Primary 4-Color Google Navigation -->
+  <!-- Scrollable Nav & Bottom Section -->
+  <div class="flex-1 overflow-y-auto custom-scrollbar p-4 xl:p-5 flex flex-col justify-between space-y-4">
+    <div class="space-y-4">
+      <!-- Primary 4-Color Google Navigation -->
     <nav class="flex flex-col gap-2.5" aria-label="Menu Utama">
       <!-- 1. Beranda (Google Blue) -->
       <button
@@ -485,56 +487,57 @@
   </div>
 
   <!-- Bottom Action Buttons: 3D Buttons -->
-  <div class="pt-4 mt-4 border-t-2 border-gray-200">
-    {#if auth.user}
-      <div class="p-3 rounded-xl bg-gray-50 border-2 border-gray-300 shadow-[0_2px_0_#d1d5db]">
-        <button
-          type="button"
-          onclick={() => navigate(`/profil/${auth.user!.username}`)}
-          class="flex items-center gap-2.5 overflow-hidden text-left w-full mb-2.5 cursor-pointer"
-        >
-          <img
-            src={auth.user.avatarUrl}
-            alt={auth.user.name}
-            class="w-9 h-9 rounded-full object-cover border border-gray-300 shrink-0"
-          />
-          <div class="overflow-hidden">
-            <p class="text-xs font-extrabold text-gray-900 truncate">
-              {auth.user.companyName || auth.user.name}
-            </p>
-            <p class="text-[11px] text-gray-500 truncate">
-              {auth.user.schoolName || '@' + auth.user.username}
-            </p>
-          </div>
-        </button>
+    <div class="pt-4 mt-4 border-t-2 border-gray-200 shrink-0">
+      {#if auth.user}
+        <div class="p-3 rounded-xl bg-gray-50 border-2 border-gray-300 shadow-[0_2px_0_#d1d5db]">
+          <button
+            type="button"
+            onclick={() => navigate(`/profil/${auth.user!.username}`)}
+            class="flex items-center gap-2.5 overflow-hidden text-left w-full mb-2.5 cursor-pointer"
+          >
+            <img
+              src={auth.user.avatarUrl}
+              alt={auth.user.name}
+              class="w-9 h-9 rounded-full object-cover border border-gray-300 shrink-0"
+            />
+            <div class="overflow-hidden">
+              <p class="text-xs font-extrabold text-gray-900 truncate">
+                {auth.user.companyName || auth.user.name}
+              </p>
+              <p class="text-[11px] text-gray-500 truncate">
+                {auth.user.schoolName || '@' + auth.user.username}
+              </p>
+            </div>
+          </button>
 
-        <button
-          type="button"
-          onclick={handleLogout}
-          class="w-full h-9 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-[#EA4335] font-bold text-xs flex items-center justify-center gap-1.5 transition active:translate-y-0.5 cursor-pointer"
-        >
-          <LogOut class="w-3.5 h-3.5" />
-          <span>Keluar Akun</span>
-        </button>
-      </div>
-    {:else}
-      <div class="flex flex-col gap-2.5">
-        <button
-          type="button"
-          onclick={() => navigate('/masuk')}
-          class="h-11 w-full rounded-xl bg-[#4285F4] hover:bg-[#1a73e8] text-white font-bold text-xs shadow-[0_3px_0_#1a56b0] active:shadow-none active:translate-y-0.5 flex items-center justify-center transition cursor-pointer"
-        >
-          Masuk ke Akun
-        </button>
-        <button
-          type="button"
-          onclick={() => navigate('/daftar')}
-          class="h-11 w-full rounded-xl bg-[#34A853] hover:bg-[#2d9247] text-white font-bold text-xs shadow-[0_3px_0_#1e7e34] active:shadow-none active:translate-y-0.5 flex items-center justify-center transition cursor-pointer"
-        >
-          Daftar Baru
-        </button>
-      </div>
-    {/if}
+          <button
+            type="button"
+            onclick={handleLogout}
+            class="w-full h-9 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-[#EA4335] font-bold text-xs flex items-center justify-center gap-1.5 transition active:translate-y-0.5 cursor-pointer"
+          >
+            <LogOut class="w-3.5 h-3.5" />
+            <span>Keluar Akun</span>
+          </button>
+        </div>
+      {:else}
+        <div class="flex flex-col gap-2.5">
+          <button
+            type="button"
+            onclick={() => navigate('/masuk')}
+            class="h-11 w-full rounded-xl bg-[#4285F4] hover:bg-[#1a73e8] text-white font-bold text-xs shadow-[0_3px_0_#1a56b0] active:shadow-none active:translate-y-0.5 flex items-center justify-center transition cursor-pointer"
+          >
+            Masuk ke Akun
+          </button>
+          <button
+            type="button"
+            onclick={() => navigate('/daftar')}
+            class="h-11 w-full rounded-xl bg-[#34A853] hover:bg-[#2d9247] text-white font-bold text-xs shadow-[0_3px_0_#1e7e34] active:shadow-none active:translate-y-0.5 flex items-center justify-center transition cursor-pointer"
+          >
+            Daftar Baru
+          </button>
+        </div>
+      {/if}
+    </div>
   </div>
 </aside>
 

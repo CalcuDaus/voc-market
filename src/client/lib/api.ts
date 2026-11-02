@@ -9,6 +9,13 @@ export const eden = treaty<App>(origin, {
   }
 });
 
+type UnauthorizedHandler = (data: any) => void;
+let unauthorizedHandler: UnauthorizedHandler | null = null;
+
+export function onUnauthorized(handler: UnauthorizedHandler): void {
+  unauthorizedHandler = handler;
+}
+
 export async function apiFetch<T = any>(
   path: string,
   options: RequestInit = {}
@@ -33,6 +40,18 @@ export async function apiFetch<T = any>(
     data = await res.json();
   } catch {
     data = null;
+  }
+
+  if (
+    res.status === 401 &&
+    path !== '/api/auth/login' &&
+    path !== '/api/auth/register' &&
+    path !== '/api/auth/me' &&
+    path !== '/api/auth/session'
+  ) {
+    if (unauthorizedHandler) {
+      unauthorizedHandler(data);
+    }
   }
 
   return {

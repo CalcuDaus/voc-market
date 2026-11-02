@@ -1,4 +1,5 @@
 import { apiFetch } from './api';
+import { sessionManager } from './session.svelte';
 import { wsClient } from './ws.svelte';
 
 export interface AuthUser {
@@ -50,6 +51,9 @@ class AuthState {
       pendingOrdersCount: number;
       unreadNotificationsCount?: number;
       schoolSlug?: string | null;
+      sessionExpiresAt?: string | null;
+      remainingSeconds?: number;
+      isRemembered?: boolean;
     }>('/api/auth/me');
 
     if (res.ok && res.data?.user) {
@@ -58,6 +62,10 @@ class AuthState {
       this.schoolSlug = res.data.schoolSlug ?? null;
       wsClient.setUnreadCount(res.data.unreadNotificationsCount || 0);
       wsClient.connect();
+      sessionManager.updateSessionInfo({
+        remainingSeconds: res.data.remainingSeconds,
+        isRemembered: res.data.isRemembered
+      });
     } else {
       this.user = null;
       this.pendingOrdersCount = 0;
@@ -67,10 +75,11 @@ class AuthState {
     this.ready = true;
   }
 
-  setAuthenticated(user: AuthUser) {
+  setAuthenticated(user: AuthUser, session?: { maxAgeSec: number; isRemembered: boolean }) {
     this.user = user;
     this.ready = true;
     wsClient.connect();
+    sessionManager.notifyLogin(user, session);
   }
 
   async logout(): Promise<void> {
@@ -79,6 +88,7 @@ class AuthState {
     this.pendingOrdersCount = 0;
     this.schoolSlug = null;
     wsClient.disconnect();
+    sessionManager.notifyLogout();
   }
 }
 
