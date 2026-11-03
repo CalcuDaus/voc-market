@@ -30,8 +30,7 @@ RUN bun install --production
 COPY --from=builder /app/dist ./dist
 
 # Copy backend source files, seed data, and configs
-COPY --from=builder /app/src/server ./src/server
-COPY --from=builder /app/src/shared ./src/shared
+COPY --from=builder /app/src ./src
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=builder /app/docker-entrypoint.sh ./docker-entrypoint.sh

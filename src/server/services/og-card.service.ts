@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { eq } from 'drizzle-orm';
 import { db } from '../db';
 import { products, users } from '../db/schema';
-import { formatRupiah } from '../../client/lib/format';
+import { formatRupiah } from '../../shared/format';
 import { POST_TYPE_LABELS } from '../../shared/constants';
 
 function escapeXml(text: string | null | undefined): string {

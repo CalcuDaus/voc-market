@@ -9,7 +9,7 @@ import {
 } from '../db/schema';
 import { PricingService } from './pricing.service';
 import { BadgeService, type UserLevelEvaluation } from './badge.service';
-import { formatDateId, formatRupiah } from '../../client/lib/format';
+import { formatDateId, formatRupiah } from '../../shared/format';
 
 export interface SellerSmartTip {
   type: 'action' | 'warning' | 'success' | 'info';
