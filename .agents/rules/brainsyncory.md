@@ -1,7 +1,7 @@
 
 
 # Project Memory — voc-market
-> 71 notes | Score threshold: >40
+> 73 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,11 +18,11 @@
 
 **Stack:** JavaScript/TypeScript · Tailwind
 
-## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Project Standards
+## Project Standards
 
-- convention in .gitignore
 - Replaced auth StatsService — wraps unsafe operation in error boundary — confirmed 4x
 - Patched security issue ImageValidationError — uses a proper password hashing ... — confirmed 12x
+- convention in .gitignore
 - Fixed null crash in String — prevents XSS injection attacks — confirmed 10x
 - 11 potentially unused files detected — confirmed 3x
 - Enable strict mode in tsconfig.json

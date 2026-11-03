@@ -9,6 +9,7 @@
     "dev": "concurrently -n api,web -c blue,green \"bun run dev:server\" \"bun run dev:client\"",
     "build": "vite build",
     "start": "bun src/server/index.ts",
+    "db:init": "bun src/server/db/init-db.ts",
     "db:reset": "bun src/server/db/reset.ts",
     "db:push": "drizzle-kit push --force",
     "db:seed": "bun src/server/db/seed.ts",

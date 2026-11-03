@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.gitignore
+.gemini
+_legacy_laravel
+tests
+coverage
+*.log
+.env.local
+.env*.local
+tmp
+plan
+
