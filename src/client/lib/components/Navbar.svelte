@@ -66,17 +66,16 @@
   }
 </script>
 
-<!-- Mobile Top Header (< lg) — Clean Centered Logo -->
+<!-- Mobile Top Header (< lg) — Clean Centered Text-Only Logo -->
 <header
   class="lg:hidden fixed top-0 inset-x-0 h-15 bg-white border-b-2 border-gray-200 z-30 px-4 flex items-center justify-center shadow-xs print:hidden"
 >
   <button
     type="button"
     onclick={() => navigate('/')}
-    class="flex items-center gap-2 text-center focus:outline-none cursor-pointer group"
+    class="text-center focus:outline-none cursor-pointer group"
   >
-    <img src="/images/skillhub-icon.png" alt="Skill-Hub" class="w-7 h-7 rounded-lg object-contain" />
-    <span class="font-black text-xl tracking-wider text-gray-900 group-hover:text-[#4285F4] transition uppercase leading-none">
+    <span class="font-black text-2xl tracking-wider text-gray-900 group-hover:text-[#4285F4] transition uppercase leading-none">
       SKILL-HUB
     </span>
   </button>
@@ -86,21 +85,18 @@
 <aside
   class="hidden lg:flex lg:flex-col bg-white border-2 border-gray-300 rounded-2xl shadow-[0_5px_0_#d1d5db] h-[calc(100vh-2.5rem)] max-h-[calc(100vh-2.5rem)] overflow-hidden print:hidden"
 >
-  <!-- Fixed Header: Logo SKILL-HUB -->
+  <!-- Fixed Header: Logo SKILL-HUB (Text Only) -->
   <div class="p-4 xl:p-5 pb-3 text-center border-b-2 border-gray-100 shrink-0">
     <button
       type="button"
       onclick={() => navigate('/')}
       class="inline-block text-center focus:outline-none group cursor-pointer"
     >
-      <div class="flex items-center justify-center gap-2 mb-0.5">
-        <img src="/images/skillhub-icon.png" alt="Skill-Hub" class="w-7 h-7 rounded-lg object-contain" />
-        <span
-          class="font-black text-2xl xl:text-[25px] tracking-wider text-gray-800 uppercase block drop-shadow-xs group-hover:text-[#4285F4] transition"
-        >
-          SKILL-HUB
-        </span>
-      </div>
+      <span
+        class="font-black text-2xl xl:text-[26px] tracking-wider text-gray-800 uppercase block drop-shadow-xs group-hover:text-[#4285F4] transition"
+      >
+        SKILL-HUB
+      </span>
       <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">
         Portofolio &amp; Pameran SMK
       </span>
