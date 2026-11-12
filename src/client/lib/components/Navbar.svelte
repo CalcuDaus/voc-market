@@ -66,63 +66,20 @@
   }
 </script>
 
-<!-- Mobile Top Header (< lg) -->
+<!-- Mobile Top Header (< lg) — Clean Centered Logo -->
 <header
-  class="lg:hidden fixed top-0 inset-x-0 h-15 bg-white border-b-2 border-gray-300 z-30 px-4 flex items-center justify-between shadow-sm print:hidden"
+  class="lg:hidden fixed top-0 inset-x-0 h-15 bg-white border-b-2 border-gray-200 z-30 px-4 flex items-center justify-center shadow-xs print:hidden"
 >
   <button
     type="button"
     onclick={() => navigate('/')}
-    class="flex items-center gap-2.5 text-left focus:outline-none cursor-pointer"
+    class="flex items-center gap-2 text-center focus:outline-none cursor-pointer group"
   >
-    <img src="/images/skillhub-icon.png" alt="Skill-Hub" class="w-8 h-8 rounded-lg object-contain" />
-    <div>
-      <span class="font-black text-base text-gray-900 tracking-wider block leading-none">
-        SKILL-HUB
-      </span>
-      <span class="text-[11px] text-gray-500 font-medium">Portofolio & Pameran SMK</span>
-    </div>
+    <img src="/images/skillhub-icon.png" alt="Skill-Hub" class="w-7 h-7 rounded-lg object-contain" />
+    <span class="font-black text-xl tracking-wider text-gray-900 group-hover:text-[#4285F4] transition uppercase leading-none">
+      SKILL-HUB
+    </span>
   </button>
-
-  <div class="flex items-center gap-2">
-    <button
-      type="button"
-      onclick={() => locationStore.openModal()}
-      class="flex items-center gap-1 px-2.5 py-1 text-xs font-bold rounded-full border-2 {locationStore.isActive
-        ? 'border-amber-400 bg-amber-50 text-amber-800'
-        : 'border-gray-300 bg-gray-50 text-gray-700'}"
-      title="Filter Lokasi Dekat Saya"
-    >
-      <MapPin class="w-3.5 h-3.5 text-amber-600 shrink-0" />
-      <span class="max-w-20 truncate">{locationStore.subdistrictName || 'Dekat Saya'}</span>
-    </button>
-
-    {#if auth.user}
-      <NotificationBell compact={true} />
-      <button
-        type="button"
-        onclick={() => navigate(`/profil/${auth.user!.username}`)}
-        class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 border-2 border-gray-300 px-2.5 py-1 rounded-full transition cursor-pointer"
-      >
-        <img
-          src={auth.user.avatarUrl}
-          alt={auth.user.name}
-          class="w-6 h-6 rounded-full object-cover"
-        />
-        <span class="text-xs font-bold text-gray-800 max-w-22 truncate">
-          {auth.user.firstName || auth.user.name}
-        </span>
-      </button>
-    {:else}
-      <button
-        type="button"
-        onclick={() => navigate('/masuk')}
-        class="h-9 px-4 rounded-xl bg-[#4285F4] hover:bg-[#1a73e8] shadow-[0_3px_0_#1a56b0] active:shadow-none active:translate-y-0.5 text-white text-xs font-bold transition cursor-pointer"
-      >
-        Masuk
-      </button>
-    {/if}
-  </div>
 </header>
 
 <!-- Desktop Left Sidebar (>= lg) — 3D Tactile Card (System Design Section 6.1) -->
