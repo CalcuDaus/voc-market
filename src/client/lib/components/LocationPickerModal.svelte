@@ -102,7 +102,7 @@
 </script>
 
 {#if open}
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
     <div
       class="relative w-full max-w-md max-h-[85vh] flex flex-col bg-white rounded-3xl border-2 border-slate-900 shadow-[0_8px_0_#0f172a] p-6 text-slate-800"
     >

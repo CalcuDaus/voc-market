@@ -28,9 +28,6 @@
   import { navigate, router } from '../router.svelte';
   import { toast } from '../toast.svelte';
   import NotificationBell from './NotificationBell.svelte';
-  import LocationPickerModal from './LocationPickerModal.svelte';
-
-  let showLocationModal = $state(false);
 
   function isActive(prefix: string): boolean {
     if (prefix === '/') return router.pathname === '/' && !router.search.includes('focus=search');
@@ -90,7 +87,7 @@
   <div class="flex items-center gap-2">
     <button
       type="button"
-      onclick={() => (showLocationModal = true)}
+      onclick={() => locationStore.openModal()}
       class="flex items-center gap-1 px-2.5 py-1 text-xs font-bold rounded-full border-2 {locationStore.isActive
         ? 'border-amber-400 bg-amber-50 text-amber-800'
         : 'border-gray-300 bg-gray-50 text-gray-700'}"
@@ -238,7 +235,7 @@
       <!-- 5. Lokasi Dekat Saya (#12) -->
       <button
         type="button"
-        onclick={() => (showLocationModal = true)}
+        onclick={() => locationStore.openModal()}
         class="h-11 px-3.5 rounded-xl flex items-center justify-between text-xs transition w-full text-left active:shadow-none active:translate-y-0.5 cursor-pointer {locationStore.isActive
           ? 'bg-amber-100 text-amber-900 border-2 border-amber-400 shadow-[0_3px_0_#d97706] font-black'
           : 'bg-white text-gray-700 border-2 border-gray-300 shadow-[0_2px_0_#d1d5db] hover:border-amber-400 font-bold'}"
@@ -689,5 +686,3 @@
     </button>
   {/if}
 </nav>
-
-<LocationPickerModal open={showLocationModal} onclose={() => (showLocationModal = false)} />

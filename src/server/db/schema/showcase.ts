@@ -60,3 +60,4 @@ export const projectMedia = mysqlTable(
   },
   (table) => [index('idx_project_media_product').on(table.productId, table.sortOrder)]
 );
+

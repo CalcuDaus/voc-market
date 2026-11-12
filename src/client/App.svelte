@@ -5,7 +5,9 @@
   import Navbar from './lib/components/Navbar.svelte';
   import ToastContainer from './lib/components/ToastContainer.svelte';
   import SessionWarningModal from './lib/components/SessionWarningModal.svelte';
+  import LocationPickerModal from './lib/components/LocationPickerModal.svelte';
   import { sessionManager } from './lib/session.svelte';
+  import { locationStore } from './lib/location.svelte';
 
   // Tier 1 Pages
   import HomePage from './pages/HomePage.svelte';
@@ -208,6 +210,7 @@
 <div class="min-h-screen bg-white text-gray-900 font-['Poppins',sans-serif]">
   <ToastContainer />
   <SessionWarningModal />
+  <LocationPickerModal open={locationStore.showModal} onclose={() => locationStore.closeModal()} />
 
   {#if isAuthPage}
     <!-- Dedicated Fullscreen Canvas for Auth Pages (Section 4 & 5) -->
@@ -224,7 +227,7 @@
         class="w-full max-w-[1440px] bg-[#EEEEEE] min-h-screen px-2 sm:px-4 lg:px-6 py-0 lg:py-5 flex justify-center gap-6 items-start shadow-sm border-x border-gray-300/60 print:bg-transparent print:border-0 print:shadow-none print:p-0"
       >
         <!-- Left Column: Desktop Left Sidebar Menu + Mobile Nav Provider -->
-        <div class="w-0 lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-5 lg:self-start print:hidden">
+        <div class="w-0 lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-5 lg:self-start print:hidden z-20">
           <Navbar />
         </div>
 

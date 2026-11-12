@@ -20,6 +20,15 @@ class LocationStore {
   lng = $state<number | null>(null);
   detecting = $state<boolean>(false);
   error = $state<string | null>(null);
+  showModal = $state<boolean>(false);
+
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+  }
 
   constructor() {
     if (typeof window !== 'undefined') {
