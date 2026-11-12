@@ -120,7 +120,7 @@
 </script>
 
 <!-- 2-Column Inside Canvas: Center Feed + Right Sidebar (System Design Section 1 & 6.4) -->
-<div class="flex gap-6 items-start justify-center">
+<div class="flex gap-0 lg:gap-6 items-start justify-center">
   <!-- Center Column: Scrolling Feed of All Works & Services -->
   <div class="flex-1 min-w-0 max-w-2xl w-full">
     <!-- Top Search & Filter Bar (Card Surface 3D) -->

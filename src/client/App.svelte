@@ -224,7 +224,7 @@
     <div class="min-h-screen bg-white flex justify-center px-0 sm:px-4 md:px-6 lg:px-8 print:p-0">
       <!-- Centered Layered Card Canvas: bg-[#EEEEEE] full-height (Layer 1) -->
       <div
-        class="w-full max-w-[1440px] bg-[#EEEEEE] min-h-screen px-2 sm:px-4 lg:px-6 py-0 lg:py-5 flex justify-center gap-6 items-start shadow-sm border-x border-gray-300/60 print:bg-transparent print:border-0 print:shadow-none print:p-0"
+        class="w-full max-w-[1440px] bg-[#EEEEEE] min-h-screen px-3 sm:px-4 lg:px-6 py-0 lg:py-5 flex justify-center gap-0 lg:gap-6 items-start shadow-sm border-x border-gray-300/60 print:bg-transparent print:border-0 print:shadow-none print:p-0"
       >
         <!-- Left Column: Desktop Left Sidebar Menu + Mobile Nav Provider -->
         <div class="w-0 lg:w-60 xl:w-64 shrink-0 lg:sticky lg:top-5 lg:self-start print:hidden z-20">
