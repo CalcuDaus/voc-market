@@ -477,6 +477,42 @@ export const SCHEMA_DDL_STATEMENTS: string[] = [
     UNIQUE KEY \`uq_product_daily_stats_prod_date\` (\`product_id\`, \`stat_date\`),
     KEY \`idx_product_daily_stats_date\` (\`stat_date\`),
     CONSTRAINT \`fk_product_daily_stats_product\` FOREIGN KEY (\`product_id\`) REFERENCES \`products\`(\`id\`) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`,
+
+  `CREATE TABLE \`project_details\` (
+    \`product_id\` BIGINT UNSIGNED NOT NULL,
+    \`tagline\` VARCHAR(255) NULL,
+    \`major\` VARCHAR(80) NULL,
+    \`problem\` TEXT NULL,
+    \`process\` TEXT NULL,
+    \`result\` TEXT NULL,
+    \`role\` VARCHAR(160) NULL,
+    \`tools\` JSON NULL,
+    \`team_members\` JSON NULL,
+    \`demo_url\` VARCHAR(500) NULL,
+    \`repo_url\` VARCHAR(500) NULL,
+    \`model_url\` VARCHAR(500) NULL,
+    \`created_at\` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    \`updated_at\` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (\`product_id\`),
+    KEY \`idx_project_details_major\` (\`major\`),
+    CONSTRAINT \`fk_project_details_product\` FOREIGN KEY (\`product_id\`) REFERENCES \`products\`(\`id\`) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`,
+
+  `CREATE TABLE \`project_media\` (
+    \`id\` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    \`product_id\` BIGINT UNSIGNED NOT NULL,
+    \`kind\` ENUM('image', 'video', 'model3d', 'lottie', 'embed', 'pdf') NOT NULL DEFAULT 'image',
+    \`url\` VARCHAR(500) NOT NULL,
+    \`poster_url\` VARCHAR(500) NULL,
+    \`title\` VARCHAR(200) NULL,
+    \`caption\` TEXT NULL,
+    \`sort_order\` INT NOT NULL DEFAULT 0,
+    \`meta\` JSON NULL,
+    \`created_at\` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (\`id\`),
+    KEY \`idx_project_media_product\` (\`product_id\`, \`sort_order\`),
+    CONSTRAINT \`fk_project_media_product\` FOREIGN KEY (\`product_id\`) REFERENCES \`products\`(\`id\`) ON DELETE CASCADE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`
 ];
 

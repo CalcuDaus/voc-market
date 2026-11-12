@@ -127,10 +127,10 @@
       <!-- Official Document Banner -->
       <header class="pb-6 border-b-2 border-gray-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-3.5">
-          <img src="/images/voc-logo.png" alt="VOC-Market" class="w-12 h-12 object-contain shrink-0" />
+          <img src="/images/skillhub-icon.png" alt="Skill-Hub" class="w-12 h-12 rounded-xl object-contain shrink-0 shadow-xs" />
           <div>
             <p class="text-[10px] font-black uppercase tracking-widest text-[#4285F4]">
-              VOC-Market • Dokumen Portofolio Industri Siswa SMK
+              Skill-Hub • Dokumen Portofolio Industri Siswa SMK
             </p>
             <h1 class="text-lg sm:text-2xl font-black text-gray-900 tracking-tight">
               PASPOR KERJA & REKAM JEJAK VOKASI

@@ -163,8 +163,8 @@
       >
         <div>
           <div class="flex items-center gap-2 mb-3 pt-4 lg:pt-0">
-            <img src="/images/voc-logo.png" alt="VOC-Market" class="w-8 h-8 object-contain" />
-            <h1 class="text-xl font-bold text-gray-900">Daftar Akun Baru</h1>
+            <img src="/images/skillhub-icon.png" alt="Skill-Hub" class="w-8 h-8 rounded-lg object-contain" />
+            <h1 class="text-xl font-bold text-gray-900">Daftar Akun Baru Skill-Hub</h1>
           </div>
           <p class="text-xs text-gray-500 mb-5">
             Lengkapi data akun untuk mulai berkarya, memesan bantuan siswa, atau merekrut talenta SMK.

@@ -7,3 +7,4 @@ export * from './talent';
 export * from './challenges';
 export * from './system';
 export * from './learning';
+export * from './showcase';

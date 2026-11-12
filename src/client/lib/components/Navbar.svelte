@@ -78,12 +78,12 @@
     onclick={() => navigate('/')}
     class="flex items-center gap-2.5 text-left focus:outline-none cursor-pointer"
   >
-    <img src="/images/voc-logo.png" alt="VOC-Market" class="w-8 h-8 object-contain" />
+    <img src="/images/skillhub-icon.png" alt="Skill-Hub" class="w-8 h-8 rounded-lg object-contain" />
     <div>
       <span class="font-black text-base text-gray-900 tracking-wider block leading-none">
-        VOCMARKET
+        SKILL-HUB
       </span>
-      <span class="text-[11px] text-gray-500 font-medium">Karya & Talenta SMK</span>
+      <span class="text-[11px] text-gray-500 font-medium">Portofolio & Pameran SMK</span>
     </div>
   </button>
 
@@ -132,20 +132,23 @@
 <aside
   class="hidden lg:flex lg:flex-col bg-white border-2 border-gray-300 rounded-2xl shadow-[0_5px_0_#d1d5db] h-[calc(100vh-2.5rem)] max-h-[calc(100vh-2.5rem)] overflow-hidden print:hidden"
 >
-  <!-- Fixed Header: Logo VOCMARKET -->
+  <!-- Fixed Header: Logo SKILL-HUB -->
   <div class="p-4 xl:p-5 pb-3 text-center border-b-2 border-gray-100 shrink-0">
     <button
       type="button"
       onclick={() => navigate('/')}
       class="inline-block text-center focus:outline-none group cursor-pointer"
     >
-      <span
-        class="font-black text-2xl xl:text-[26px] tracking-wider text-gray-800 uppercase block drop-shadow-xs group-hover:text-[#4285F4] transition"
-      >
-        VOCMARKET
-      </span>
+      <div class="flex items-center justify-center gap-2 mb-0.5">
+        <img src="/images/skillhub-icon.png" alt="Skill-Hub" class="w-7 h-7 rounded-lg object-contain" />
+        <span
+          class="font-black text-2xl xl:text-[25px] tracking-wider text-gray-800 uppercase block drop-shadow-xs group-hover:text-[#4285F4] transition"
+        >
+          SKILL-HUB
+        </span>
+      </div>
       <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">
-        Katalog & Jembatan Industri
+        Portofolio &amp; Pameran SMK
       </span>
     </button>
   </div>
@@ -161,12 +164,31 @@
         onclick={() => navigate('/')}
         class="h-11 px-3.5 rounded-xl flex items-center gap-3 text-xs transition w-full text-left active:shadow-none active:translate-y-0.5 cursor-pointer {isActive(
           '/'
-        )
+        ) && !isActive('/pameran')
           ? 'bg-[#4285F4] text-white shadow-[0_3px_0_#1a56b0] font-black'
           : 'bg-blue-50/80 text-[#4285F4] border-2 border-blue-200 shadow-[0_2px_0_#bfdbfe] hover:bg-blue-100 font-bold'}"
       >
         <Home class="w-4 h-4 shrink-0" />
         <span>Beranda Karya</span>
+      </button>
+
+      <!-- 2. Pameran Karya (Skill-Hub 3D Showcase) -->
+      <button
+        type="button"
+        onclick={() => navigate('/pameran')}
+        class="h-11 px-3.5 rounded-xl flex items-center justify-between text-xs transition w-full text-left active:shadow-none active:translate-y-0.5 cursor-pointer {isActive(
+          '/pameran'
+        )
+          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-[0_3px_0_#1e3a8a] font-black'
+          : 'bg-indigo-50/80 text-indigo-700 border-2 border-indigo-200 shadow-[0_2px_0_#c7d2fe] hover:bg-indigo-100 font-bold'}"
+      >
+        <span class="flex items-center gap-3">
+          <Sparkles class="w-4 h-4 shrink-0 text-cyan-500" />
+          <span>Pameran Karya 3D</span>
+        </span>
+        <span class="text-[9px] px-1.5 py-0.5 rounded-md font-black {isActive('/pameran') ? 'bg-white/20 text-white' : 'bg-indigo-200/80 text-indigo-900'}">
+          BARU
+        </span>
       </button>
 
       <!-- 2. Cari (Google Yellow) -->

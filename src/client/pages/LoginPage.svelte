@@ -114,12 +114,12 @@
         class="bg-gray-50/50 border-b-2 lg:border-b-0 lg:border-r-2 border-gray-300 p-6 sm:p-8 flex flex-col justify-center items-center text-center lg:w-[42%]"
       >
         <img
-          src="/images/voc-market-logo-login.png"
-          alt="VOC-Market"
-          class="w-[170px] sm:w-[190px] mb-4 object-contain"
+          src="/images/skillhub-banner.png"
+          alt="Skill-Hub"
+          class="w-[200px] sm:w-[220px] mb-4 object-contain rounded-xl shadow-xs"
         />
         <p class="text-xs text-gray-500 leading-relaxed max-w-xs">
-          Platform showcase dan jual-beli karya anak SMK & vokasi Indonesia.
+          Portal pameran karya nyata, prototipe 3D, dan portofolio keahlian siswa SMK Indonesia.
         </p>
 
         <!-- Quick Demo Accounts for Testing -->
@@ -161,9 +161,9 @@
         <!-- Mobile Logo -->
         <div class="block lg:hidden text-center mb-4">
           <img
-            src="/images/voc-market-logo-mobile.png"
-            alt="VOC-Market"
-            class="w-[180px] mx-auto object-contain"
+            src="/images/skillhub-banner.png"
+            alt="Skill-Hub"
+            class="w-[200px] mx-auto object-contain rounded-xl shadow-xs"
           />
         </div>
 

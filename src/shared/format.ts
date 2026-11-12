@@ -25,3 +25,4 @@ export function formatRelativeTime(iso: string | null | undefined): string {
   if (diffDay < 30) return `${diffDay} hari lalu`;
   return formatDateId(iso);
 }
+

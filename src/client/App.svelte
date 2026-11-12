@@ -42,6 +42,10 @@
   import SellerDashboardPage from './pages/SellerDashboardPage.svelte';
   import SellerReportPrintPage from './pages/SellerReportPrintPage.svelte';
 
+  // Skill-Hub Showcase Pages
+  import ShowcaseGalleryPage from './pages/ShowcaseGalleryPage.svelte';
+  import ShowcaseDetailPage from './pages/ShowcaseDetailPage.svelte';
+
   $effect(() => {
     sessionManager.init();
     auth.refresh();
@@ -82,6 +86,9 @@
     // Tier 3 Routes
     | { name: 'seller-dashboard' }
     | { name: 'seller-report-print' }
+    // Skill-Hub Showcase Routes
+    | { name: 'showcase-gallery' }
+    | { name: 'showcase-detail'; id: number }
     | { name: 'not-found' };
 
   let currentRoute = $derived.by<MatchedRoute>(() => {
@@ -114,7 +121,16 @@
     if (path === '/dashboard-penjual/cetak') return { name: 'seller-report-print' };
     if (path === '/dashboard-penjual') return { name: 'seller-dashboard' };
 
+    // Skill-Hub Showcase Static Routes
+    if (path === '/pameran' || path === '/showcase' || path === '/skill-hub') {
+      return { name: 'showcase-gallery' };
+    }
+
     // Dynamic Parameterized Routes
+    const showcaseDetailMatch = path.match(/^\/pameran\/(\d+)$/);
+    if (showcaseDetailMatch) {
+      return { name: 'showcase-detail', id: Number(showcaseDetailMatch[1]) };
+    }
     const challengeEditMatch = path.match(/^\/tantangan\/([^/]+)\/edit$/);
     if (challengeEditMatch) {
       return { name: 'challenge-edit', slug: decodeURIComponent(challengeEditMatch[1]) };
@@ -282,6 +298,12 @@
             <SellerDashboardPage />
           {:else if currentRoute.name === 'seller-report-print'}
             <SellerReportPrintPage />
+
+          <!-- Skill-Hub Showcase Components -->
+          {:else if currentRoute.name === 'showcase-gallery'}
+            <ShowcaseGalleryPage />
+          {:else if currentRoute.name === 'showcase-detail'}
+            <ShowcaseDetailPage postId={currentRoute.id} />
 
           {:else}
             <div class="max-w-lg mx-auto px-4 py-16 text-center">

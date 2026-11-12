@@ -22,6 +22,8 @@ Ikuti urutan ini secara ketat dan berurutan:
    - Wilayah & Sekolah Resmi, Peran Perusahaan & Admin, Notifikasi Live WebSocket + `@elysiajs/cron`, Etalase Sekolah (TeFa), Papan "Butuh Bantuan" & Penawaran Siswa, Status "Siap Kerja" & Cari Talenta (`talentScore`), serta Tantangan Industri + Sertifikat QR.
 4. **[03_TIER3_BUN_ELYSIA_SVELTE_PLAN.md](03_TIER3_BUN_ELYSIA_SVELTE_PLAN.md)** *(Eksekusi Tahap 3 — Pembelajaran & Retensi)*
    - Generator Kartu Preview WhatsApp 1200×630 & Kit Promosi WA, Kalkulator HPP & Benchmark Pasar, Kecamatan & Filter "Dekat Saya" (Haversine), Level Kreator 1–4 & 7 Lencana Otomatis, serta Dashboard Penjual Mini & Cetak Laporan Kewirausahaan (PKK).
+5. **[04_SKILL_HUB_SHOWCASE_PLAN.md](04_SKILL_HUB_SHOWCASE_PLAN.md)** *(Draf Tahap 4 — Skill-Hub: Portofolio Interaktif & Pameran Karya)*
+   - Studi kasus proyek, media interaktif (3D `model-viewer`, video, Lottie, demo web), pameran virtual, Mode Kiosk, dan apresiasi industri.
 
 ---
 

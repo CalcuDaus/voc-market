@@ -28,6 +28,7 @@
   import ConfirmModal from '../lib/components/ConfirmModal.svelte';
   import ReportModal from '../lib/components/ReportModal.svelte';
   import SharePromoModal from '../lib/components/SharePromoModal.svelte';
+  import ShowcaseDetailPage from './ShowcaseDetailPage.svelte';
 
   interface Props {
     postId: number;
@@ -173,6 +174,8 @@
         Kembali ke Beranda
       </button>
     </div>
+  {:else if post.type === 'portfolio'}
+    <ShowcaseDetailPage {postId} />
   {:else}
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <!-- Left Column: Photo, Details & Reviews -->

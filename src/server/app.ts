@@ -19,6 +19,7 @@ import { adminRoutes } from './modules/admin.routes';
 import { locationRoutes } from './modules/location.routes';
 import { pricingRoutes } from './modules/pricing.routes';
 import { sellerDashboardRoutes } from './modules/seller-dashboard.routes';
+import { showcaseRoutes } from './modules/showcase.routes';
 import { createCronPlugin } from './services/cron.service';
 import { renderSpaHtmlWithOg } from './services/og.service';
 
@@ -99,6 +100,7 @@ export function createApp() {
     .use(locationRoutes)
     .use(pricingRoutes)
     .use(sellerDashboardRoutes)
+    .use(showcaseRoutes)
     .get('/uploads/*', ({ params, set }) => {
       const file = serveSafeStaticFile(join(publicDir, 'uploads'), params['*']);
       if (!file) {
