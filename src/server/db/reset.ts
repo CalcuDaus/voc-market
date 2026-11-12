@@ -430,7 +430,7 @@ export const SCHEMA_DDL_STATEMENTS: string[] = [
     \`reporter_id\` BIGINT UNSIGNED NULL,
     \`target_type\` ENUM('post', 'request', 'challenge', 'user') NOT NULL,
     \`target_id\` BIGINT UNSIGNED NOT NULL,
-    \`reason\` ENUM('penipuan', 'konten_tidak_pantas', 'eksploitasi', 'spam', 'lainnya') NOT NULL,
+    \`reason\` VARCHAR(60) NOT NULL DEFAULT 'lainnya',
     \`details\` TEXT NULL,
     \`status\` ENUM('open', 'reviewed', 'actioned', 'dismissed') NOT NULL DEFAULT 'open',
     \`handled_by\` BIGINT UNSIGNED NULL,

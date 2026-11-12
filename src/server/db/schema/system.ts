@@ -36,13 +36,7 @@ export const reports = mysqlTable(
     ),
     targetType: mysqlEnum('target_type', ['post', 'request', 'challenge', 'user']).notNull(),
     targetId: bigint('target_id', { mode: 'number', unsigned: true }).notNull(),
-    reason: mysqlEnum('reason', [
-      'penipuan',
-      'konten_tidak_pantas',
-      'eksploitasi',
-      'spam',
-      'lainnya'
-    ]).notNull(),
+    reason: varchar('reason', { length: 60 }).notNull(),
     details: text('details'),
     status: mysqlEnum('status', ['open', 'reviewed', 'actioned', 'dismissed'])
       .notNull()

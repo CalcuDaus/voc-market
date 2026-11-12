@@ -8,6 +8,7 @@
     Home,
     MapPin,
     Package,
+    ShieldAlert,
     Upload,
     Wrench
   } from 'lucide-svelte';
@@ -17,6 +18,7 @@
   import { toast } from '../lib/toast.svelte';
   import { formatRupiah } from '../lib/format';
   import HppCalculator from '../lib/components/HppCalculator.svelte';
+  import { SKILLHUB_POLICY_SUMMARY, validateContentPolicy } from '../../shared/content-policy';
 
   interface Props {
     editPostId?: number;
@@ -56,6 +58,7 @@
   let loadingInit = $state(false);
   let submitting = $state(false);
   let errorMsg = $state('');
+  let agreedPolicy = $state(false);
 
   let estimatedProfit = $derived(Math.max(0, (Number(price) || 0) - (Number(costPrice) || 0)));
 
@@ -135,6 +138,11 @@
         errorMsg = 'Judul karya wajib diisi.';
         return;
       }
+      const policyCheck = validateContentPolicy({ name });
+      if (!policyCheck.valid) {
+        errorMsg = policyCheck.error || 'Judul melanggar ketentuan konten Skill-Hub.';
+        return;
+      }
       if (type === 'product' && (!price || price <= 0)) {
         errorMsg = 'Tentukan harga jual produk.';
         return;
@@ -153,6 +161,18 @@
 
     if (!description.trim() || description.trim().length < 10) {
       errorMsg = 'Deskripsi karya minimal 10 karakter.';
+      return;
+    }
+
+    const policyCheck = validateContentPolicy({ name, description });
+    if (!policyCheck.valid) {
+      errorMsg = policyCheck.error || 'Konten melanggar ketentuan kebijakan Skill-Hub.';
+      return;
+    }
+
+    if (!agreedPolicy && !isEditMode) {
+      errorMsg =
+        'Anda wajib menyetujui Ketentuan & Kebijakan Karya Skill-Hub sebelum mempublikasikan karya.';
       return;
     }
 
@@ -279,6 +299,23 @@
           {errorMsg}
         </div>
       {/if}
+
+      <!-- Ketentuan & Kebijakan Karya Skill-Hub Banner -->
+      <div class="mb-5 p-4 rounded-2xl bg-amber-50/80 border-2 border-amber-300 shadow-[0_3px_0_#fde68a]">
+        <div class="flex items-start gap-2.5">
+          <ShieldAlert class="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+          <div class="space-y-1">
+            <h2 class="text-xs font-black text-amber-950 uppercase tracking-wide">
+              Ketentuan &amp; Kebijakan Konten Skill-Hub (Wajib Dipatuhi)
+            </h2>
+            <ul class="text-[11px] text-amber-900 space-y-1 list-disc pl-4 leading-relaxed font-medium">
+              {#each SKILLHUB_POLICY_SUMMARY as rule}
+                <li>{rule}</li>
+              {/each}
+            </ul>
+          </div>
+        </div>
+      </div>
 
       <form onsubmit={handleSubmit} class="space-y-5">
         {#if step === 1}
@@ -617,6 +654,19 @@
               </p>
             </div>
           </div>
+
+          {#if !isEditMode}
+            <label class="flex items-start gap-3 p-3.5 rounded-xl bg-blue-50/70 border-2 border-blue-200 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                bind:checked={agreedPolicy}
+                class="mt-0.5 w-4 h-4 rounded border-2 border-gray-300 text-[#4285F4] focus:ring-[#4285F4] cursor-pointer shrink-0"
+              />
+              <span class="text-xs text-slate-800 font-semibold leading-relaxed">
+                Saya menyatakan bahwa postingan ini adalah <strong>murni karya/layanan keahlian vokasi SMK</strong> dan <strong>tidak mengandung unsur SARA, pornografi, rasisme, perjudian, atau pelanggaran Undang-Undang Republik Indonesia</strong>.
+              </span>
+            </label>
+          {/if}
 
           <!-- Final Submit Button (Google Color Specific from Section 6.3) -->
           <div class="flex justify-between pt-2">

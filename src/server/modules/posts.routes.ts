@@ -24,6 +24,7 @@ import { checkRateLimit, getClientIp } from '../middleware/rate-limit';
 import { ImageValidationError, saveUploadedWebp } from '../services/image.service';
 import { formatIdrPlain } from '../services/whatsapp.service';
 import { POST_TYPE_LABELS } from '../../shared/constants';
+import { validateContentPolicy } from '../../shared/content-policy';
 import { GeoService } from '../services/geo.service';
 import { OgCardService } from '../services/og-card.service';
 import { PricingService } from '../services/pricing.service';
@@ -336,7 +337,13 @@ export const postsRoutes = new Elysia({ prefix: '/api' })
       .where(eq(products.id, postId))
       .limit(1);
 
-    if (!rows[0] || (rows[0].post.status === 'archived' && currentUser?.id !== rows[0].post.userId)) {
+    const isPlatformAdmin = Boolean(currentUser?.isAdmin) || currentUser?.userType === 'admin';
+    if (
+      !rows[0] ||
+      (rows[0].post.status === 'archived' &&
+        currentUser?.id !== rows[0].post.userId &&
+        !isPlatformAdmin)
+    ) {
       set.status = 404;
       return { error: 'Karya tidak ditemukan.' };
     }
@@ -540,6 +547,12 @@ export const postsRoutes = new Elysia({ prefix: '/api' })
       return { error: 'Deskripsi karya minimal 10 karakter agar pembeli paham.' };
     }
 
+    const policyCheck = validateContentPolicy({ name, description });
+    if (!policyCheck.valid) {
+      set.status = 422;
+      return { error: policyCheck.error };
+    }
+
     let costBreakdown: CostBreakdown | null = null;
     if (data.costBreakdown) {
       try {
@@ -734,6 +747,12 @@ export const postsRoutes = new Elysia({ prefix: '/api' })
     if (!description || description.length < 10) {
       set.status = 422;
       return { error: 'Deskripsi karya minimal 10 karakter.' };
+    }
+
+    const policyCheck = validateContentPolicy({ name, description });
+    if (!policyCheck.valid) {
+      set.status = 422;
+      return { error: policyCheck.error };
     }
 
     let costBreakdown: CostBreakdown | null = existing.costBreakdown;

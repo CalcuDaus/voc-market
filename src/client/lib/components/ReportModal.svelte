@@ -14,7 +14,7 @@
 
   let { open, targetType, targetId, targetLabel = 'konten ini', onClose }: Props = $props();
 
-  let reason = $state('penipuan');
+  let reason = $state('sara_rasis');
   let details = $state('');
   let submitting = $state(false);
 
@@ -39,7 +39,7 @@
       return;
     }
 
-    toast.success('Laporan berhasil dikirim ke Tim Moderasi VOC-Market. Terima kasih!');
+    toast.success('Laporan berhasil dikirim ke Superadmin & Tim Moderasi Skill-Hub. Terima kasih!');
     details = '';
     onClose();
   }
@@ -47,7 +47,7 @@
 
 {#if open}
   <div
-    class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-xs flex items-center justify-center p-4 print:hidden"
+    class="fixed inset-0 z-[110] bg-gray-900/60 backdrop-blur-xs flex items-center justify-center p-4 print:hidden"
     role="dialog"
     aria-modal="true"
   >

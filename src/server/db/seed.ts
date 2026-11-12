@@ -242,12 +242,26 @@ export async function runSeed(): Promise<void> {
     }
   ]);
 
-  // 4. Platform Admin & Industrial Company Partners
+  // 4. Platform Superadmin, Admin & Industrial Company Partners
   await db.insert(users).values({
-    name: 'Admin Moderasi VOC-Market',
+    name: 'Superadmin Skill-Hub',
+    username: 'superadmin',
+    firstName: 'Superadmin',
+    lastName: 'Skill-Hub',
+    email: 'superadmin@skillhub.id',
+    password: defaultPassword,
+    phoneNumber: '081100000001',
+    userType: 'admin',
+    isAdmin: true,
+    isVerified: true,
+    bio: 'Superadmin Utama Skill-Hub — Kontrol penuh atas konten karya, akun pengguna, sekolah, mitra industri, dan penegakan kebijakan hukum.'
+  });
+
+  await db.insert(users).values({
+    name: 'Admin Moderasi Skill-Hub',
     username: 'admin_voc',
     firstName: 'Admin',
-    lastName: 'VOC-Market',
+    lastName: 'Skill-Hub',
     email: 'admin@voc.id',
     password: defaultPassword,
     phoneNumber: '081100001111',

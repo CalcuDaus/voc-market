@@ -24,6 +24,7 @@ import {
   REQUEST_STATUS_LABELS,
   WORK_MODE_LABELS
 } from '../../shared/constants';
+import { validateContentPolicy } from '../../shared/content-policy';
 
 function generateRequestCode(): string {
   const now = new Date();
@@ -215,6 +216,12 @@ export const requestsRoutes = new Elysia({ prefix: '/api' })
     if (description.length < 15) {
       set.status = 422;
       return { error: 'Jelaskan kebutuhan Anda minimal 15 karakter agar siswa paham.' };
+    }
+
+    const policyCheck = validateContentPolicy({ title, description });
+    if (!policyCheck.valid) {
+      set.status = 422;
+      return { error: policyCheck.error };
     }
     if (!['fixed', 'range', 'negotiable'].includes(budgetTypeRaw)) {
       set.status = 422;

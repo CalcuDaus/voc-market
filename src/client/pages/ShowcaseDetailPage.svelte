@@ -10,6 +10,7 @@
     ExternalLink,
     Eye,
     FileBadge,
+    Flag,
     Github,
     Globe,
     Heart,
@@ -27,6 +28,7 @@
   import ShowcaseMediaViewer from '../lib/components/ShowcaseMediaViewer.svelte';
   import ShowcaseEditorModal from '../lib/components/ShowcaseEditorModal.svelte';
   import SharePromoModal from '../lib/components/SharePromoModal.svelte';
+  import ReportModal from '../lib/components/ReportModal.svelte';
 
   interface Props {
     postId: number;
@@ -43,6 +45,7 @@
 
   let showEditor = $state(false);
   let showShareModal = $state(false);
+  let showReportModal = $state(false);
 
   let isAuthor = $derived(auth.user && post && auth.user.id === post.userId);
   let canManage = $derived(
@@ -107,6 +110,18 @@
         <Share2 class="w-4 h-4" />
         <span>Bagikan</span>
       </button>
+
+      {#if !isAuthor}
+        <button
+          type="button"
+          onclick={() => (showReportModal = true)}
+          class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-[#EA4335] bg-white hover:bg-red-50 border border-slate-200 hover:border-red-200 px-3.5 py-2 rounded-xl transition cursor-pointer"
+          title="Laporkan Karya"
+        >
+          <Flag class="w-4 h-4" />
+          <span>Laporkan</span>
+        </button>
+      {/if}
     </div>
   </div>
 
@@ -438,6 +453,16 @@
     }}
     isOpen={showShareModal}
     onClose={() => (showShareModal = false)}
+  />
+{/if}
+
+{#if post}
+  <ReportModal
+    open={showReportModal}
+    targetType="post"
+    targetId={post.id}
+    targetLabel={post.name}
+    onClose={() => (showReportModal = false)}
   />
 {/if}
 

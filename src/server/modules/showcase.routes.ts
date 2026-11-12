@@ -18,6 +18,7 @@ import {
   parseSkills,
   resolveUserFromRequest
 } from '../middleware/auth';
+import { validateContentPolicy } from '../../shared/content-policy';
 
 export const showcaseRoutes = new Elysia({ prefix: '/api/showcase' })
 
@@ -367,6 +368,18 @@ export const showcaseRoutes = new Elysia({ prefix: '/api/showcase' })
       if (!isOwner && !isAdmin && !isTeacher) {
         set.status = 403;
         return { error: 'Anda tidak memiliki hak untuk mengedit karya ini' };
+      }
+
+      const policyCheck = validateContentPolicy({
+        tagline: body.tagline,
+        problem: body.problem,
+        process: body.process,
+        result: body.result,
+        role: body.role
+      });
+      if (!policyCheck.valid) {
+        set.status = 422;
+        return { error: policyCheck.error };
       }
 
       // Clean & validate tools

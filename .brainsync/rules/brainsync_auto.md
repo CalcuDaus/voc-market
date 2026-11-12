@@ -1,7 +1,7 @@
 
 
 # Project Memory — voc-market
-> 73 notes | Score threshold: >40
+> 77 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -16,18 +16,17 @@
 - **ALWAYS** ask the user before running commands that modify system state, install packages, or make network requests.
 - When in doubt, **show the command first** and wait for approval.
 
-**Stack:** JavaScript/TypeScript · Tailwind
+**Stack:** JavaScript/TypeScript · Tailwind · DB: MySQL
 
-## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Project Standards
+## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Active: `.`
 
-- Replaced auth StatsService — wraps unsafe operation in error boundary — confirmed 4x
-- Patched security issue ImageValidationError — uses a proper password hashing ... — confirmed 12x
+- **convention in .gitignore**
+- **convention in .gitignore**
+
+## Project Standards
+
 - convention in .gitignore
-- Fixed null crash in String — prevents XSS injection attacks — confirmed 10x
-- 11 potentially unused files detected — confirmed 3x
-- Enable strict mode in tsconfig.json
-- Prefer Array methods (map, filter, reduce) over manual loops
-- Use template literals for string interpolation, not concatenation
+- convention in .gitignore
 
 ## Known Fixes
 

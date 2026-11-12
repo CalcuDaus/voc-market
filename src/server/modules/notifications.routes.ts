@@ -100,18 +100,13 @@ export const notificationsRoutes = new Elysia({ prefix: '/api' })
       set.status = 422;
       return { error: 'ID konten yang dilaporkan tidak valid.' };
     }
-    if (!['penipuan', 'konten_tidak_pantas', 'eksploitasi', 'spam', 'lainnya'].includes(reasonRaw)) {
+    if (!Object.keys(REPORT_REASON_LABELS).includes(reasonRaw)) {
       set.status = 422;
       return { error: 'Pilih alasan pelaporan yang valid.' };
     }
 
     const targetType = targetTypeRaw as 'post' | 'request' | 'challenge' | 'user';
-    const reason = reasonRaw as
-      | 'penipuan'
-      | 'konten_tidak_pantas'
-      | 'eksploitasi'
-      | 'spam'
-      | 'lainnya';
+    const reason = reasonRaw;
 
     const [inserted] = await db.insert(reports).values({
       reporterId: currentUser?.id ?? null,

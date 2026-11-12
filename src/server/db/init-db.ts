@@ -114,6 +114,45 @@ export async function ensureShowcaseTables(conn: mysql.Connection): Promise<void
       console.warn('[Skill-Hub DB] Warning ensuring showcase table:', e);
     }
   }
+
+  try {
+    await conn.query(
+      "ALTER TABLE `reports` MODIFY COLUMN `reason` VARCHAR(60) NOT NULL DEFAULT 'lainnya';"
+    );
+  } catch (e) {
+    console.warn('[Skill-Hub DB] Warning updating reports.reason column:', e);
+  }
+
+  try {
+    const [existingSuper] = await conn.query<mysql.RowDataPacket[]>(
+      "SELECT id FROM `users` WHERE `username` = 'superadmin' LIMIT 1;"
+    );
+    if (existingSuper.length === 0) {
+      const hashedPw = await Bun.password.hash('password123', {
+        algorithm: 'bcrypt',
+        cost: 10
+      });
+      await conn.query(
+        `INSERT INTO \`users\` (
+          \`name\`, \`username\`, \`first_name\`, \`last_name\`, \`email\`, \`password\`,
+          \`phone_number\`, \`user_type\`, \`is_admin\`, \`is_verified\`, \`bio\`
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'admin', 1, 1, ?);`,
+        [
+          'Superadmin Skill-Hub',
+          'superadmin',
+          'Superadmin',
+          'Skill-Hub',
+          'superadmin@skillhub.id',
+          hashedPw,
+          '081100000001',
+          'Superadmin Utama Skill-Hub — Kontrol penuh atas konten karya, akun pengguna, sekolah, mitra industri, dan penegakan kebijakan hukum.'
+        ]
+      );
+      console.log('[Skill-Hub DB] Superadmin account (username: superadmin) created.');
+    }
+  } catch (e) {
+    console.warn('[Skill-Hub DB] Warning ensuring superadmin account:', e);
+  }
 }
 
 export async function initDatabase(): Promise<void> {

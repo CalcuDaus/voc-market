@@ -88,6 +88,10 @@ export const CERTIFICATE_TYPE_LABELS: Record<
 };
 
 export const REPORT_REASON_LABELS: Record<string, string> = {
+  sara_rasis: 'Unsur SARA, Rasisme & Ujaran Kebencian (Melanggar UU)',
+  pornografi: 'Pornografi / Konten Asusila & Tidak Senonoh',
+  bukan_karya: 'Bukan Karya Vokasi / Postingan Di Luar Topik',
+  pelanggaran_uu: 'Judi Online, Narkoba, Kekerasan / Melanggar Hukum',
   penipuan: 'Indikasi Penipuan / Meminta Uang di Luar',
   konten_tidak_pantas: 'Konten Tidak Pantas / Melanggar Aturan',
   eksploitasi: 'Eksploitasi Siswa / Upah Tidak Wajar',

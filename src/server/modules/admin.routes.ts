@@ -9,12 +9,18 @@ import {
   regions,
   reports,
   schools,
+  sessions,
   users
 } from '../db/schema';
-import { resolveUserFromRequest, sanitizePublicUser, type UserRow } from '../middleware/auth';
+import {
+  getAvatarUrl,
+  resolveUserFromRequest,
+  sanitizePublicUser,
+  type UserRow
+} from '../middleware/auth';
 import { NotifyService } from '../services/notify.service';
 import { StatsService } from '../services/stats.service';
-import { REPORT_REASON_LABELS } from '../../shared/constants';
+import { POST_TYPE_LABELS, REPORT_REASON_LABELS, USER_ROLE_LABELS } from '../../shared/constants';
 
 function requirePlatformAdmin(user: UserRow | null): user is UserRow {
   if (!user) return false;
@@ -30,15 +36,30 @@ export const adminRoutes = new Elysia({ prefix: '/api/admin' })
     }
     if (!requirePlatformAdmin(admin)) {
       set.status = 403;
-      return { error: 'Akses ditolak. Halaman ini khusus Admin Moderasi Platform.' };
+      return { error: 'Akses ditolak. Halaman ini khusus Superadmin & Admin Moderasi Platform.' };
     }
 
-    const companyRows = await db
+    const postRows = await db
+      .select({ post: products, author: users })
+      .from(products)
+      .innerJoin(users, eq(products.userId, users.id))
+      .orderBy(desc(products.createdAt))
+      .limit(300);
+
+    const allUserRows = await db
       .select({ user: users, region: regions })
       .from(users)
       .leftJoin(regions, eq(users.regionId, regions.id))
-      .where(eq(users.userType, 'company'))
       .orderBy(desc(users.createdAt));
+
+    const requestRows = await db
+      .select({ req: jobRequests, requester: users })
+      .from(jobRequests)
+      .innerJoin(users, eq(jobRequests.userId, users.id))
+      .orderBy(desc(jobRequests.createdAt))
+      .limit(200);
+
+    const companyRows = allUserRows.filter((u) => u.user.userType === 'company');
 
     const schoolRows = await db
       .select({ school: schools, region: regions })
@@ -57,16 +78,76 @@ export const adminRoutes = new Elysia({ prefix: '/api/admin' })
       .from(reports)
       .leftJoin(users, eq(reports.reporterId, users.id))
       .orderBy(desc(reports.createdAt))
-      .limit(100);
+      .limit(150);
+
+    const postMap = new Map(postRows.map((p) => [p.post.id, p.post.name]));
+    const userMap = new Map(allUserRows.map((u) => [u.user.id, u.user.name]));
+    const requestMap = new Map(requestRows.map((r) => [r.req.id, r.req.title]));
+    const challengeMap = new Map(challengeRows.map((c) => [c.challenge.id, c.challenge.title]));
 
     return {
       summary: {
+        totalPostsCount: postRows.length,
+        archivedPostsCount: postRows.filter((p) => p.post.status === 'archived').length,
+        totalUsersCount: allUserRows.length,
+        totalRequestsCount: requestRows.length,
         pendingCompaniesCount: companyRows.filter((c) => !c.user.companyVerifiedAt).length,
         unverifiedSchoolsCount: schoolRows.filter((s) => !s.school.isVerified).length,
         pendingChallengesCount: challengeRows.filter((c) => c.challenge.status === 'pending_review')
           .length,
         openReportsCount: reportRows.filter((r) => r.report.status === 'open').length
       },
+      posts: postRows.map(({ post, author }) => ({
+        id: post.id,
+        name: post.name,
+        code: post.code,
+        type: post.type,
+        typeLabel: POST_TYPE_LABELS[post.type] || post.type,
+        price: post.price,
+        imageUrl: post.image,
+        status: post.status,
+        isVerifiedByTeacher: Boolean(post.isVerifiedByTeacher),
+        viewsCount: post.viewsCount,
+        likesCount: post.likesCount,
+        createdAt: post.createdAt.toISOString(),
+        author: {
+          id: author.id,
+          name: author.name,
+          username: author.username,
+          schoolName: author.schoolName
+        }
+      })),
+      users: allUserRows.map(({ user, region }) => ({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        userType: user.userType,
+        roleLabel: USER_ROLE_LABELS[user.userType] || user.userType,
+        isAdmin: Boolean(user.isAdmin),
+        isVerified: Boolean(user.isVerified),
+        schoolName: user.schoolName,
+        companyName: user.companyName,
+        major: user.major,
+        regionName: region?.name ?? null,
+        avatarUrl: getAvatarUrl(user),
+        createdAt: user.createdAt.toISOString()
+      })),
+      requests: requestRows.map(({ req, requester }) => ({
+        id: req.id,
+        title: req.title,
+        description: req.description,
+        status: req.status,
+        budgetMin: req.budgetMin,
+        budgetMax: req.budgetMax,
+        createdAt: req.createdAt.toISOString(),
+        requester: {
+          id: requester.id,
+          name: requester.name,
+          username: requester.username
+        }
+      })),
       companies: companyRows.map(({ user, region }) => ({
         ...sanitizePublicUser(user),
         email: user.email,
@@ -99,19 +180,250 @@ export const adminRoutes = new Elysia({ prefix: '/api/admin' })
         createdAt: challenge.createdAt.toISOString(),
         company: sanitizePublicUser(company)
       })),
-      reports: reportRows.map(({ report, reporter }) => ({
-        id: report.id,
-        targetType: report.targetType,
-        targetId: report.targetId,
-        reason: report.reason,
-        reasonLabel: REPORT_REASON_LABELS[report.reason] || report.reason,
-        details: report.details,
-        status: report.status,
-        createdAt: report.createdAt.toISOString(),
-        reporter: reporter
-          ? { id: reporter.id, name: reporter.name, username: reporter.username }
-          : null
-      }))
+      reports: reportRows.map(({ report, reporter }) => {
+        let targetTitle = `#${report.targetId}`;
+        if (report.targetType === 'post') {
+          targetTitle = postMap.get(report.targetId) || `Karya #${report.targetId}`;
+        } else if (report.targetType === 'user') {
+          targetTitle = userMap.get(report.targetId) || `Akun #${report.targetId}`;
+        } else if (report.targetType === 'request') {
+          targetTitle = requestMap.get(report.targetId) || `Permintaan #${report.targetId}`;
+        } else if (report.targetType === 'challenge') {
+          targetTitle = challengeMap.get(report.targetId) || `Tantangan #${report.targetId}`;
+        }
+
+        return {
+          id: report.id,
+          targetType: report.targetType,
+          targetId: report.targetId,
+          targetTitle,
+          reason: report.reason,
+          reasonLabel: REPORT_REASON_LABELS[report.reason] || report.reason,
+          details: report.details,
+          status: report.status,
+          createdAt: report.createdAt.toISOString(),
+          reporter: reporter
+            ? { id: reporter.id, name: reporter.name, username: reporter.username }
+            : null
+        };
+      })
+    };
+  })
+
+  // Takedown or Restore Post
+  .post('/posts/:id/takedown', async ({ request, params, body, set }) => {
+    const admin = await resolveUserFromRequest(request);
+    if (!admin || !requirePlatformAdmin(admin)) {
+      set.status = 403;
+      return { error: 'Khusus Superadmin / Admin Platform.' };
+    }
+
+    const postId = Number(params.id);
+    const [post] = await db.select().from(products).where(eq(products.id, postId)).limit(1);
+    if (!post) {
+      set.status = 404;
+      return { error: 'Postingan karya tidak ditemukan.' };
+    }
+
+    const data = (body ?? {}) as Record<string, unknown>;
+    const nextStatus =
+      data.status === 'published' || data.status === 'archived'
+        ? data.status
+        : post.status === 'published'
+          ? 'archived'
+          : 'published';
+    const reason = String(
+      data.reason ?? 'Melanggar Ketentuan & Kebijakan Konten Skill-Hub (SARA / Asusila / Di Luar Karya Vokasi).'
+    ).trim();
+
+    await db.update(products).set({ status: nextStatus }).where(eq(products.id, post.id));
+
+    if (nextStatus === 'archived') {
+      await NotifyService.send({
+        userId: post.userId,
+        type: 'post_takedown',
+        title: 'Postingan Karya Di-takedown oleh Superadmin',
+        body: `Karya "${post.name}" telah diturunkan dari publikasi. Alasan: ${reason}`,
+        actionUrl: `/karya/${post.id}`
+      });
+    } else {
+      await NotifyService.send({
+        userId: post.userId,
+        type: 'post_restored',
+        title: 'Postingan Karya Dipulihkan oleh Superadmin',
+        body: `Karya "${post.name}" kini telah kembali tayang di katalog publik.`,
+        actionUrl: `/karya/${post.id}`
+      });
+    }
+
+    return {
+      success: true,
+      postId: post.id,
+      status: nextStatus
+    };
+  })
+
+  // Permanently Delete Post
+  .delete('/posts/:id', async ({ request, params, set }) => {
+    const admin = await resolveUserFromRequest(request);
+    if (!admin || !requirePlatformAdmin(admin)) {
+      set.status = 403;
+      return { error: 'Khusus Superadmin / Admin Platform.' };
+    }
+
+    const postId = Number(params.id);
+    const [post] = await db.select().from(products).where(eq(products.id, postId)).limit(1);
+    if (!post) {
+      set.status = 404;
+      return { error: 'Postingan karya tidak ditemukan.' };
+    }
+
+    await db.delete(products).where(eq(products.id, post.id));
+
+    return {
+      success: true,
+      deletedId: post.id
+    };
+  })
+
+  // Update User Account (Role, Verification, Admin Status, Password Reset, Takedown All Posts)
+  .patch('/users/:id', async ({ request, params, body, set }) => {
+    const admin = await resolveUserFromRequest(request);
+    if (!admin || !requirePlatformAdmin(admin)) {
+      set.status = 403;
+      return { error: 'Khusus Superadmin / Admin Platform.' };
+    }
+
+    const targetId = Number(params.id);
+    const [targetUser] = await db.select().from(users).where(eq(users.id, targetId)).limit(1);
+    if (!targetUser) {
+      set.status = 404;
+      return { error: 'Akun pengguna tidak ditemukan.' };
+    }
+
+    const data = (body ?? {}) as Record<string, unknown>;
+    const updates: Record<string, any> = {};
+
+    if (
+      typeof data.userType === 'string' &&
+      ['smk', 'public', 'teacher', 'company', 'admin'].includes(data.userType)
+    ) {
+      if (targetUser.id === admin.id && data.userType !== 'admin') {
+        set.status = 422;
+        return { error: 'Anda tidak dapat mencopot peran Admin dari akun Anda sendiri.' };
+      }
+      updates.userType = data.userType;
+      if (data.userType === 'admin') {
+        updates.isAdmin = true;
+      }
+    }
+
+    if (typeof data.isAdmin === 'boolean') {
+      if (targetUser.id === admin.id && !data.isAdmin) {
+        set.status = 422;
+        return { error: 'Anda tidak dapat mencopot hak Superadmin dari akun Anda sendiri.' };
+      }
+      updates.isAdmin = data.isAdmin;
+    }
+
+    if (typeof data.isVerified === 'boolean') {
+      updates.isVerified = data.isVerified;
+      updates.verifiedAt = data.isVerified ? new Date() : null;
+      updates.verifiedBy = data.isVerified ? admin.id : null;
+    }
+
+    if (typeof data.newPassword === 'string' && data.newPassword.trim().length >= 6) {
+      updates.password = await Bun.password.hash(data.newPassword.trim(), {
+        algorithm: 'bcrypt',
+        cost: 10
+      });
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await db.update(users).set(updates).where(eq(users.id, targetUser.id));
+    }
+
+    if (data.takedownAllPosts) {
+      await db
+        .update(products)
+        .set({ status: 'archived' })
+        .where(eq(products.userId, targetUser.id));
+    }
+
+    if (data.revokeSessions) {
+      await db.delete(sessions).where(eq(sessions.userId, targetUser.id));
+    }
+
+    return {
+      success: true,
+      userId: targetUser.id,
+      updates
+    };
+  })
+
+  // Permanently Delete User Account
+  .delete('/users/:id', async ({ request, params, set }) => {
+    const admin = await resolveUserFromRequest(request);
+    if (!admin || !requirePlatformAdmin(admin)) {
+      set.status = 403;
+      return { error: 'Khusus Superadmin / Admin Platform.' };
+    }
+
+    const targetId = Number(params.id);
+    if (targetId === admin.id) {
+      set.status = 422;
+      return { error: 'Anda tidak dapat menghapus akun Superadmin yang sedang Anda gunakan.' };
+    }
+
+    const [targetUser] = await db.select().from(users).where(eq(users.id, targetId)).limit(1);
+    if (!targetUser) {
+      set.status = 404;
+      return { error: 'Akun pengguna tidak ditemukan.' };
+    }
+
+    await db.delete(sessions).where(eq(sessions.userId, targetUser.id));
+    await db.delete(users).where(eq(users.id, targetUser.id));
+
+    return {
+      success: true,
+      deletedUserId: targetUser.id
+    };
+  })
+
+  // Moderate / Takedown Job Request ("Papan Butuh Bantuan")
+  .post('/requests/:id/moderate', async ({ request, params, body, set }) => {
+    const admin = await resolveUserFromRequest(request);
+    if (!admin || !requirePlatformAdmin(admin)) {
+      set.status = 403;
+      return { error: 'Khusus Superadmin / Admin Platform.' };
+    }
+
+    const reqId = Number(params.id);
+    const [jobReq] = await db.select().from(jobRequests).where(eq(jobRequests.id, reqId)).limit(1);
+    if (!jobReq) {
+      set.status = 404;
+      return { error: 'Permintaan tidak ditemukan.' };
+    }
+
+    const data = (body ?? {}) as Record<string, unknown>;
+    if (data.action === 'delete') {
+      await db.delete(jobRequests).where(eq(jobRequests.id, jobReq.id));
+      return { success: true, deletedId: jobReq.id };
+    }
+
+    const nextStatus =
+      data.status === 'open' || data.status === 'hidden'
+        ? data.status
+        : jobReq.status === 'hidden'
+          ? 'open'
+          : 'hidden';
+
+    await db.update(jobRequests).set({ status: nextStatus }).where(eq(jobRequests.id, jobReq.id));
+
+    return {
+      success: true,
+      requestId: jobReq.id,
+      status: nextStatus
     };
   })
 
@@ -243,7 +555,7 @@ export const adminRoutes = new Elysia({ prefix: '/api/admin' })
         userId: challenge.companyId,
         type: 'challenge_approved',
         title: 'Tantangan Industri Disetujui & Tayang!',
-        body: `"${challenge.title}" kini telah terbuka bagi seluruh Siswa SMK di VOC-Market.`,
+        body: `"${challenge.title}" kini telah terbuka bagi seluruh Siswa SMK di Skill-Hub.`,
         actionUrl: `/tantangan/${challenge.slug}`
       });
 
@@ -329,13 +641,20 @@ export const adminRoutes = new Elysia({ prefix: '/api/admin' })
     const data = (body ?? {}) as Record<string, unknown>;
     const statusRaw = String(data.status ?? '').trim();
     const hideTarget = Boolean(data.hideTarget);
+    const deleteTarget = Boolean(data.deleteTarget);
 
     if (!['reviewed', 'actioned', 'dismissed'].includes(statusRaw)) {
       set.status = 422;
       return { error: 'Status tindak lanjut laporan tidak valid.' };
     }
 
-    if (hideTarget || statusRaw === 'actioned') {
+    if (deleteTarget) {
+      if (report.targetType === 'post') {
+        await db.delete(products).where(eq(products.id, report.targetId));
+      } else if (report.targetType === 'request') {
+        await db.delete(jobRequests).where(eq(jobRequests.id, report.targetId));
+      }
+    } else if (hideTarget || statusRaw === 'actioned') {
       if (report.targetType === 'request') {
         await db
           .update(jobRequests)
@@ -351,6 +670,12 @@ export const adminRoutes = new Elysia({ prefix: '/api/admin' })
           .update(challenges)
           .set({ status: 'cancelled' })
           .where(eq(challenges.id, report.targetId));
+      } else if (report.targetType === 'user') {
+        await db
+          .update(products)
+          .set({ status: 'archived' })
+          .where(eq(products.userId, report.targetId));
+        await db.delete(sessions).where(eq(sessions.userId, report.targetId));
       }
     }
 
@@ -368,4 +693,3 @@ export const adminRoutes = new Elysia({ prefix: '/api/admin' })
       status: statusRaw
     };
   });
-

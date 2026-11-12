@@ -5,6 +5,7 @@
     ExternalLink,
     Eye,
     Filter,
+    Flag,
     Heart,
     Layers,
     PlusCircle,
@@ -16,6 +17,7 @@
   import { apiFetch } from '../lib/api';
   import { auth } from '../lib/auth.svelte';
   import { navigate } from '../lib/router.svelte';
+  import ReportModal from '../lib/components/ReportModal.svelte';
 
   interface ShowcaseItem {
     id: number;
@@ -51,6 +53,7 @@
   let majors = $state<MajorCount[]>([]);
   let loading = $state(true);
   let loadingMajors = $state(true);
+  let reportingItem = $state<ShowcaseItem | null>(null);
 
   // Filters
   let searchQuery = $state('');
@@ -395,6 +398,17 @@
                   <Heart class="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
                   <span>{item.likesCount}</span>
                 </span>
+                <button
+                  type="button"
+                  onclick={(e) => {
+                    e.stopPropagation();
+                    reportingItem = item;
+                  }}
+                  title="Laporkan Karya"
+                  class="p-1 rounded-md text-slate-400 hover:text-[#EA4335] hover:bg-red-50 transition cursor-pointer"
+                >
+                  <Flag class="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
           </div>
@@ -403,3 +417,11 @@
     </div>
   {/if}
 </div>
+
+<ReportModal
+  open={Boolean(reportingItem)}
+  targetType="post"
+  targetId={reportingItem?.id || 0}
+  targetLabel={reportingItem?.name || 'Karya ini'}
+  onClose={() => (reportingItem = null)}
+/>

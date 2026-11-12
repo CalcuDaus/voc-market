@@ -77,7 +77,9 @@
     await auth.refresh();
     toast.success(`Selamat datang kembali, ${res.data.user.name}!`);
 
-    if (res.data.user.userType === 'teacher') {
+    if (res.data.user.isAdmin || res.data.user.userType === 'admin') {
+      navigate('/admin');
+    } else if (res.data.user.userType === 'teacher') {
       navigate('/dashboard/guru');
     } else {
       navigate('/');
@@ -128,6 +130,14 @@
             Akun Uji Coba:
           </p>
           <div class="flex flex-col gap-1.5">
+            <button
+              type="button"
+              onclick={() => fillDemo('superadmin')}
+              class="w-full text-left px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:bg-black text-xs font-semibold text-white transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+            >
+              <ShieldAlert class="w-3.5 h-3.5 text-rose-400 shrink-0" />
+              <span>Superadmin: <strong class="font-bold text-amber-300">superadmin</strong></span>
+            </button>
             <button
               type="button"
               onclick={() => fillDemo('draz_me')}

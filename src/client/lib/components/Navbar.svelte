@@ -450,7 +450,7 @@
                 : 'bg-red-50 text-[#EA4335] border-2 border-red-200 shadow-[0_2px_0_#fecdd3] hover:bg-red-100 font-bold'}"
             >
               <ShieldAlert class="w-4 h-4 shrink-0" />
-              <span>Moderasi Admin</span>
+              <span>Panel Superadmin</span>
             </button>
           {/if}
         </div>

@@ -16,21 +16,34 @@ export function onUnauthorized(handler: UnauthorizedHandler): void {
   unauthorizedHandler = handler;
 }
 
+export type ApiFetchOptions = Omit<RequestInit, 'body'> & {
+  body?: BodyInit | Record<string, any> | null;
+};
+
 export async function apiFetch<T = any>(
   path: string,
-  options: RequestInit = {}
+  options: ApiFetchOptions = {}
 ): Promise<{ ok: boolean; status: number; data: T }> {
   const headers = new Headers(options.headers || {});
+  let body: BodyInit | null | undefined = options.body as any;
+
   if (
-    options.body &&
-    !(options.body instanceof FormData) &&
-    !headers.has('Content-Type')
+    body &&
+    !(body instanceof FormData) &&
+    !(body instanceof URLSearchParams) &&
+    !(body instanceof Blob)
   ) {
-    headers.set('Content-Type', 'application/json');
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
+    if (typeof body === 'object') {
+      body = JSON.stringify(body);
+    }
   }
 
   const res = await fetch(path, {
     ...options,
+    body,
     headers,
     credentials: 'include'
   });

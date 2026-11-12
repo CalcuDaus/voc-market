@@ -3,6 +3,7 @@
     Heart,
     Share2,
     ExternalLink,
+    Flag,
     MapPin,
     MessageCircle,
     BadgeCheck,
@@ -14,6 +15,7 @@
   import { navigate } from '../router.svelte';
   import { toast } from '../toast.svelte';
   import SharePromoModal from './SharePromoModal.svelte';
+  import ReportModal from './ReportModal.svelte';
 
   interface Props {
     post: {
@@ -55,6 +57,7 @@
   let sharesCount = $state(0);
   let liking = $state(false);
   let shareModalOpen = $state(false);
+  let reportModalOpen = $state(false);
 
   $effect(() => {
     isLiked = Boolean(post.isLiked);
@@ -250,6 +253,20 @@
         {/if}
       </button>
 
+      <!-- Report button -->
+      <button
+        type="button"
+        onclick={(e) => {
+          e.stopPropagation();
+          reportModalOpen = true;
+        }}
+        class="flex items-center gap-1 text-xs font-bold text-gray-400 hover:text-[#EA4335] transition cursor-pointer"
+        title="Laporkan postingan ini"
+      >
+        <Flag class="w-4 h-4" />
+        <span class="hidden sm:inline">Laporkan</span>
+      </button>
+
       <!-- Demo / Link Button (Google Yellow Action) -->
       {#if post.projectLink}
         <button
@@ -308,3 +325,10 @@
 </article>
 
 <SharePromoModal open={shareModalOpen} {post} onclose={() => (shareModalOpen = false)} />
+<ReportModal
+  open={reportModalOpen}
+  targetType="post"
+  targetId={post.id}
+  targetLabel={post.name}
+  onClose={() => (reportModalOpen = false)}
+/>
